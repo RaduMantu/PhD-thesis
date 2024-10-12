@@ -42,7 +42,7 @@
 % hyper-references
 % http://www.tug.org/applications/hyperref/manual.html
 \PassOptionsToPackage{hyphens}{url}
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor,colortbl}
 \usepackage{hyperref}
 \hypersetup{%
 	colorlinks=true,

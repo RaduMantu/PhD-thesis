@@ -1,5 +1,28 @@
 \documentclass{template/thesis.cs.pub.ro}
+
+% personal packages from papers
+% NOTE: on collision, check the class file above
+\usepackage[T1]{fontenc}    %% required for final version
+\usepackage{graphicx}       %% figures preferd in EPS format
+\usepackage{pgfplots}
+\usepackage{wrapfig}
+\usepackage{listings}
+\usepackage{cite}
+
 \input{template/packages.tex}
+
+% custom listing styles
+\lstdefinestyle{bashstyle}{
+  language=bash,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{black},
+  stringstyle=\color{red},
+  showstringspaces=false,
+  backgroundcolor=\color{lightgray!20},
+  frame=single,
+  breaklines=true,
+}
 
 % Font & line spacing tweaks
 \setmainfont{STIXTwoText}[
@@ -29,6 +52,24 @@
 
 % set when printing
 %\hypersetup{hidelinks}
+
+% squelch wrnings
+\pgfplotsset{compat=1.18}
+
+% bash listing configuration
+\lstset{
+  basicstyle=\small\ttfamily,
+  frame=single,
+  literate = {-}{-}1,     % prevent joining -- into one
+}
+
+% use these to leave comments in text
+\newcommand{\radu}[1]{{\textcolor{orange}{(Radu: {#1})}}}
+\newcommand{\mihai}[1]{{\textcolor{blue}{(Mihai: {#1})}}}
+
+% name macros for our solutions
+\newcommand{\daf}[0]{\texttt{DAF}}
+\newcommand{\scout}[0]{\texttt{AppScout}}
 
 \makeindex
 \begin{document}

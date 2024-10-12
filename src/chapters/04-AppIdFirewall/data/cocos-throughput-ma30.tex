@@ -1,0 +1,44 @@
+\begin{figure*}
+    \centering
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            restrict y to domain = 9420:9440,
+            width                = \textwidth,
+            height               = 5cm,
+            at                   = {(0,0)},
+            xmin                 = 1000,
+            xmax                 = 9400,
+            ymin                 = 9431.5,
+            ymax                 = 9436.5,
+            xtick distance       = 1000,
+            ytick distance       = 1,
+            grid                 = both,
+            xlabel               = {MTU [bytes]},
+            ylabel               = {Throughput [Mbps]},
+            legend columns       = 3,
+            legend style         = {at={(0.17,1.05)}, anchor=south west}
+        ]
+            \addplot[color=Blue, very thick]
+                table[x=mtu, y=baseline, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput-ma30.csv};
+            \addlegendentry{baseline}
+
+            \addplot[color=Red, very thick]
+                table[x=mtu, y=scout, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput-ma30.csv};
+            \addlegendentry{AppScout}
+
+            % function derived based on scipy.stats.linregress
+            \draw[Green, dashed, line width=1.5pt] plot[samples=2, domain=1000:9420]
+                function {0.000102 * x + 9432.945001};
+            \addlegendimage{Green, dashed, line width=1.5}
+            \addlegendentry{lin. regression}
+        \end{axis}
+    \end{tikzpicture}
+
+    \caption{\scout{} throughout on IBM system.}
+    \label{apffw:appscout:fig:cocos-throughput}
+\end{figure*}
+
+\radu{TODO: check why the draw command does not work here}

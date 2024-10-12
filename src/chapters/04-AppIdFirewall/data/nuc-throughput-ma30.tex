@@ -1,0 +1,37 @@
+\begin{figure*}
+    \centering
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            restrict y to domain = 953:957,
+            width                = \textwidth,
+            height               = 5.2cm,
+            at                   = {(0,0)},
+            xmin                 = 1000,
+            xmax                 = 8700,
+            ymin                 = 954.5,
+            ymax                 = 957.0,
+            xtick distance       = 1000,
+            ytick distance       = 0.5,
+            x tick label style   = {rotate=45},
+            grid                 = both,
+            xlabel               = {MTU [bytes]},
+            ylabel               = {Throughput [Mbps]},
+            legend columns       = 3,
+            legend style         = {at={(0.03,0.78)}, anchor=south west}
+        ]
+            \addplot[color=Blue, very thick]
+                table[x=mtu, y=baseline, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/nuc-throughput-ma30.csv};
+            \addlegendentry{baseline}
+
+            \addplot[color=Red, very thick]
+                table[x=mtu, y=scout, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/nuc-throughput-ma30.csv};
+            \addlegendentry{AppScout}
+        \end{axis}
+    \end{tikzpicture}
+
+    \caption{\scout{} throughout on Intel NUC.}
+    \label{apffw:appscout:fig:nuc-throughput}
+\end{figure*}
