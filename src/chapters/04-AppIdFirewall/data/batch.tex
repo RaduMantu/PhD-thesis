@@ -1,0 +1,122 @@
+\begin{figure}
+    % Batch Size (b) impact on Throughput
+    \begin{tikzpicture}
+        % Throughput
+        \begin{axis}[
+            axis y line*      = left,
+            width             = 0.9\textwidth,
+            height            = 4.5cm,
+            xmajorgrids       = true,
+            ymin              = 4500,
+            ymax              = 9500,
+            xmin              = 1,
+            xmax              = 50,
+            xlabel            = {Batch size (b) [pkts]},
+            ylabel            = {Throughput [Mbps]},
+            % xticklabel style  = {rotate=45},
+            xtick distance    = 5,
+            ytick             = {5000, 7000, 9000},
+            legend columns    = 3,
+            legend entries    = {Min-Max throughput,
+                                 Average throughput,
+                                 Standard deviation},
+            legend style      = {at={(-0.03,1.15)}, anchor=south west}
+        ]
+            % legend images (\addlegendentry fucks with fill plot)
+            \addlegendimage{no marks, Green}
+            \addlegendimage{no marks, RoyalBlue}
+            \addlegendimage{no marks, Red}
+
+            % Minimums and Maximums
+            \addplot[name path=lower, color=Green, very thick]
+                table[x=pkts, y=min, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/batch-size.csv};
+            \addplot[name path=upper, color=Green, very thick]
+                table[x=pkts, y=max, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/batch-size.csv};
+
+            % Fill between Minimum and Maximum plots
+            \addplot[pattern=north east lines,pattern color=Green] fill between[of=lower and upper];
+
+            % Average
+            \addplot[color=RoyalBlue, very thick]
+                table[x=pkts, y=avg, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/batch-size.csv};
+        \end{axis}
+
+        % Standard Deviation
+        \begin{axis}[
+            axis y line*      = right,
+            x axis line style = {opacity=0},
+            xmajorticks       = false,
+            width             = 0.9\textwidth,
+            height            = 4.5cm,
+            xmin              = 1,
+            xmax              = 50,
+            % ymin              = 0.3,
+            % ymax              = 2,
+            ylabel            = {Std. Dev. [Mbps]},
+        ]
+            \addplot[color=Red, very thick]
+                table[x=pkts, y=stdev, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/batch-size.csv};
+        \end{axis}
+    \end{tikzpicture}
+
+    % Batch Timeout (B) impact on Throughput
+    \begin{tikzpicture}
+        % Throughput
+        \begin{axis}[
+            axis y line*      = left,
+            width             = 0.9\textwidth,
+            height            = 4.5cm,
+            xmajorgrids       = true,
+            ymin              = 4500,
+            ymax              = 9500,
+            xmin              = 1,
+            xmax              = 50,
+            xlabel            = {Timeout (B) [$\mu{}s$]},
+            ylabel            = {Throughput [Mbps]},
+            % xticklabel style  = {rotate=45},
+            xtick distance    = 5,
+            ytick             = {5000, 7000, 9000},
+        ]
+            % Minimums and Maximums
+            \addplot[name path=lower, color=Green, very thick]
+                table[x=time, y=min, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/batch-time.csv};
+            \addplot[name path=upper, color=Green, very thick]
+                table[x=time, y=max, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/batch-time.csv};
+
+            % Fill between Minimum and Maximum plots
+            \addplot[pattern=north east lines,pattern color=Green] fill between[of=lower and upper];
+
+            % Average
+            \addplot[color=RoyalBlue, very thick]
+                table[x=time, y=avg, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/batch-time.csv};
+        \end{axis}
+
+        % Standard Deviation
+        \begin{axis}[
+            axis y line*      = right,
+            x axis line style = {opacity=0},
+            xmajorticks       = false,
+            width             = 0.9\textwidth,
+            height            = 4.5cm,
+            xmin              = 1,
+            xmax              = 50,
+            % ymin              = 0.3,
+            % ymax              = 2,
+            ylabel            = {Std. Dev. [Mbps]},
+        ]
+            \addplot[color=Red, very thick]
+                table[x=time, y=stdev, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/batch-time.csv};
+        \end{axis}
+    \end{tikzpicture}
+
+    \caption{Influence of verdict batch size \& timeout on throughput.}
+    \label{appfw:daf:fig:batching}
+\end{figure}

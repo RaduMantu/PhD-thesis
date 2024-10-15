@@ -1,0 +1,37 @@
+\begin{figure}
+    \centering
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            width             = \textwidth,
+            height            = 5cm,
+            at                = {(0,0)},
+            xmin              = 600,
+            xmax              = 9000,
+            ymin              = 850,
+            xtick distance    = 2000,
+            grid              = both,
+            xlabel            = {MTU [bytes]},
+            ylabel            = {Throughput [Mbps]},
+            legend style      = {at={(0.97,0.25)}, anchor=east},
+            legend cell align = left,
+        ]
+            \addplot[color=Goldenrod, very thick]
+                table[x=mtu, y=baseline, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/nuc-throughput.csv};
+            \addlegendentry{baseline}
+
+            \addplot[color=Orange, very thick]
+                table[x=mtu, y=RUSB, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/nuc-throughput.csv};
+            \addlegendentry{RUSB}
+
+            % \addplot[color=RoyalBlue, very thick]
+            %     table[x=mtu, y=sigRUS, col sep=comma]{data/nuc-throughput.csv};
+            % \addlegendentry{RUS+sig}
+        \end{axis}
+    \end{tikzpicture}
+
+    \caption{\daf{} throughput on Intel NUC.}
+    \label{appfw:daf:fig:nuc-throughput}
+\end{figure}

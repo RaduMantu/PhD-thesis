@@ -1,0 +1,31 @@
+\begin{figure}
+    \begin{tikzpicture}
+        \begin{axis}[
+            width             = \textwidth,
+            height            = 7cm,
+            at                = {(0,0)},
+            xmin              = 5500,
+            xmax              = 9710,
+            ymax              = 6300,
+            xtick distance    = 1000,
+            grid              = both,
+            xlabel            = {MTU [bytes]},
+            ylabel            = {Throughput [Mbps]},
+            legend style      = {at={(0.04,0.80)}, anchor=west},
+            legend cell align = left,
+        ]
+            \addplot[color=RoyalBlue, very thick]
+                table[x=mtu, y=RUSuPb-doubling, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-aliasing.csv};
+            \addlegendentry{doubling}
+
+            \addplot[color=LimeGreen, very thick]
+                table[x=mtu, y=RUSuPb, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-aliasing.csv};
+            \addlegendentry{normal}
+        \end{axis}
+    \end{tikzpicture}
+
+    \caption{Effect of introducing dynamic resizing of Netlink socket buffer.}
+    \label{appfw:daf:fig:aliasing}
+\end{figure}

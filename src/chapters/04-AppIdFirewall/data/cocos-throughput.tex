@@ -1,0 +1,62 @@
+\begin{figure}
+    \centering
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            width             = \textwidth,
+            height            = 6cm,
+            at                = {(0,0)},
+            xmin              = 0,
+            xmax              = 9710,
+            ymin              = 0,
+            ymax              = 10,
+            xtick distance    = 1000,
+            ytick distance    = 1,
+            grid              = both,
+            xlabel            = {MTU [bytes]},
+            ylabel            = {Throughput [Gbps]},
+            % legend style      = {at={(0.03,0.71)}, anchor=west},
+            % legend cell align = left,
+            legend columns    = 7,
+            legend style      = {at={(0.05,1.05)}, anchor=south west}
+        ]
+            \addplot[color=Goldenrod, very thick]
+                table[x=mtu, y=baseline, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+            \addlegendentry{baseline}
+
+            \addplot[color=Rhodamine, very thick]
+                table[x=mtu, y=unopt, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+            \addlegendentry{unopt}
+
+            \addplot[color=Red, very thick]
+                table[x=mtu, y=R, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+            \addlegendentry{R}
+
+            \addplot[color=Purple, very thick]
+                table[x=mtu, y=RU, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+            \addlegendentry{RU}
+
+            \addplot[color=Green, very thick]
+                table[x=mtu, y=RUS, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+            \addlegendentry{RUS}
+
+            \addplot[color=Orange, very thick]
+                table[x=mtu, y=RUSB, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+            \addlegendentry{RUSB}
+
+            % \addplot[color=RoyalBlue, very thick]
+            %     table[x=mtu, y=sigRUS, col sep=comma]
+            %     {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+            % \addlegendentry{RUS+sig}
+        \end{axis}
+    \end{tikzpicture}
+
+    \caption{\daf{} throughput on IBM system.}
+    \label{appfw:daf:fig:cocos-throughput}
+\end{figure}
