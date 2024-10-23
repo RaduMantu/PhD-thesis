@@ -17,9 +17,8 @@
 \textbf{NetfilterQueue} is an extension to the packet filtering mechanism built into the Linux kernel. This extension takes the form of a non-standard \texttt{iptables} target: \texttt{NFQUEUE}. By making use of the \texttt{nfnetlink\_queue} subsystem (and superseding \texttt{ip\_queue}), NetfilterQueue allows judgement with regard to the acceptance of a packet to be deferred to a userpsace process (see Fig. \ref{extend:ops:fig:nfq}).
 
 \begin{figure}[htb]
-    \begin{center}
-        \includegraphics[width=0.66\textwidth,keepaspectratio]{figures/netfilter_queue.pdf}
-    \end{center}
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio]{figures/netfilter_queue.pdf}
     \caption{Packet data path when matching an iptables rule with a NFQUEUE target}
     \label{extend:ops:fig:nfq}
 \end{figure}
@@ -48,9 +47,8 @@ An advantage of relying on the Netfilter framework is that it integrates well wi
 Irrespective of the type of protocol that may benefit from these extensions, they will in all likelihood be required to interact with cloud-hosted solutions \cite{daielephant}. As a result, we focus our efforts on verifying if and how cloud providers allow the passage of annotated packets through their networks. To this end, we perform a series of inter-regional tests. The structure of the testing environment can be seen in Fig. \ref{extend:ops:fig:architecture}. Initially, the management instance (i.e., localhost) will install the annotation tool, as well as any traffic generation tools under test on each virtual machine. Additionally it will also start \texttt{tcpdump} processes and insert specific \texttt{iptables} rules with the purpose capturing relevant traffic for annotation and later analysis. When testing a certain instance (e.g., the one in me-south-1 region in AWS), a server will be started (1) by issuing a command over a ssh channel. Immediately after, all other instances will be issued similar commands, to start a client (2) and send requests to the server. The resulting traffic will be annotated in both directions. After all communication (3) will have ceased, another instance will be selected as the server. Finally, all \texttt{tcpdump} processes will be killed and the generated packet captures as well as any logs will be downloaded for analysis.
 
 \begin{figure}[htb]
-    \begin{center}
-        \includegraphics[width=0.66\textwidth,keepaspectratio]{figures/architecture.pdf}
-    \end{center}
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio]{figures/architecture.pdf}
     \caption{Architecture of the cloud testing framework.}
     \label{extend:ops:fig:architecture}
 \end{figure}
@@ -84,7 +82,9 @@ After testing multiple IP options in combination with different transport layer 
 \textbf{Timestamp option.} Consists of a 4-byte header, followed by a data segment of arbitrary length. The header fields are as follow: Option Type and Option Length (adhering to the TLV encoding of most options), succeeded by a one-byte Pointer field denoting the offset into the option where a host may add a new timestamp, and two nibble-sized Overflow and Flag fields. The Overflow field is set initially to zero and is incremented by each host that is willing but unable to add a timestamp. The Flag field defines multiple modes of operation: the hosts are either required to append only 32-bit timestamps, or to add the IP of the corresponding interface as well. In case of the latter, multiple IPs can be pre-specified so that only select hosts may add their timestamps. Initially, we crafted packets such that they contained only the originating host's IP and timestamp, while no middleboxes would be allowed to append their own. The reason for this was to easily verify if the contents of the option could be modified in transit, given that the packets ever reached their destination. Later, we relaxed this constraint and allowed middleboxes to add their own timestamps, which did not give rise to any new impediments.
 
 \begin{figure}[htb]
-        \hbox{\centering \scalebox{1.0}{\input{figures/ttl-ovf.pgf}}}
+        % \hbox{\centering \scalebox{1.0}{\input{figures/ttl-ovf.pgf}}}
+    \centering
+    \input{figures/ttl-ovf.pgf}
     \caption{Variability of IP Timestamp records and overflow in comparison with TTL distance.}
     \label{extend:ops:fig:ttl-ovf}
 \end{figure}
