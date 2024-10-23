@@ -78,16 +78,16 @@ Alongside the process identity matching mechanism, \daf{} also implements filter
     style=bashstyle,
     caption={\daf{} rule configuration with companion app},
     label={appfw:daf:lst:rule}]
-% $ ctl-fw                                           \
-%     -A                  `# append rule           ` \
-%     -c OUTPUT           `# chain                 ` \
-%     -v DROP             `# verdict               ` \
-%     -d 192.168.100.0/24 `# destination IP        ` \
-%     -! --dport 80       `# (not) destination port` \
-%     -p tcp              `# L4 protocol           ` \
-%     -n /proc/$$/ns/net  `# network namespace     ` \
-%     --sng-hash $(sha256sum /usr/bin/curl           \
-%                | awk '{print $1}')
+$ ctl-fw                                           \
+    -A                  `# append rule           ` \
+    -c OUTPUT           `# chain                 ` \
+    -v DROP             `# verdict               ` \
+    -d 192.168.100.0/24 `# destination IP        ` \
+    -! --dport 80       `# (not) destination port` \
+    -p tcp              `# L4 protocol           ` \
+    -n /proc/$$/ns/net  `# network namespace     ` \
+    --sng-hash $(sha256sum /usr/bin/curl           \
+               | awk '{print $1}')
 \end{lstlisting}
 
 Listing \ref{appfw:daf:lst:rule} is an example of \daf{} rule that targets all local processes that run in the current network namespace and make use of the \texttt{curl} base binary. The rule prevents these processes from generating TCP traffic to ports other than 80 in a given subnet. For performing an exact match on \texttt{curl} in such way as to include its shared objects dependencies, the \texttt{-{}-agg-hash} flag can be used instead of \texttt{-{}-sng-hash}. Here, the companion app can be used to calculate the aggregate hash that should be passed as a parameter (see Listing \ref{appfw:daf:lst:hash}).
@@ -96,15 +96,15 @@ Listing \ref{appfw:daf:lst:rule} is an example of \daf{} rule that targets all l
     style=bashstyle,
     caption={Aggregate hash calculation},
     label={appfw:daf:lst:hash}]
-% $ ctl-fw $(ldd /usr/bin/curl \
-%          | awk '{print $3}'  \
-%          | xargs -L 1 echo -H)
-% /usr/lib/ld-linux-x86-64.so.2     -- 16d8048cc721c4...
-% /usr/lib/libbrotlicommon.so.1.1.0 -- c6bd47ce4931b2...
-% /usr/lib/libbrotlidec.so.1.1.0    -- 5989c61ae28cb2...
-% ...
-% ======================================================
-% AGGREGATE HASH                    -- e8f4f223875676...
+$ ctl-fw $(ldd /usr/bin/curl \
+         | awk '{print $3}'  \
+         | xargs -L 1 echo -H)
+/usr/lib/ld-linux-x86-64.so.2     -- 16d8048cc721c4...
+/usr/lib/libbrotlicommon.so.1.1.0 -- c6bd47ce4931b2...
+/usr/lib/libbrotlidec.so.1.1.0    -- 5989c61ae28cb2...
+...
+======================================================
+AGGREGATE HASH                    -- e8f4f223875676...
 \end{lstlisting}
 
 

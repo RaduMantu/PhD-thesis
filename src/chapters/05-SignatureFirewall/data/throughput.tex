@@ -1,0 +1,34 @@
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width             = \textwidth,
+            height            = 8cm,
+            at                = {(0,0)},
+            xmin              = 0,
+            xmax              = 1550,
+            % ymax              = 6300,
+            xtick distance    = 100,
+            xticklabel style  = {rotate=45},
+            xlabel            = {MTU [bytes]},
+            x label style     = {at={(axis description cs:0.5,-0.175)},anchor=north},
+            ylabel            = {Throughput [Mbps]},
+            grid              = both,
+            legend style      = {at={(0.98,0.14)}, anchor=east},
+            legend cell align = left,
+        ]
+            \addplot[color=RoyalBlue, very thick]
+                table[x=mtu, y=baseline, col sep=comma]
+                {src/chapters/05-SignatureFirewall/data/throughput.csv};
+            \addlegendentry{baseline}
+
+            \addplot[color=LimeGreen, very thick]
+                table[x=mtu, y=firewall, col sep=comma]
+                {src/chapters/05-SignatureFirewall/data/throughput.csv};
+            \addlegendentry{annotated}
+        \end{axis}
+    \end{tikzpicture}
+
+    \caption{iperf3 data throughput with packet annotation.}
+    \label{sign:windows:fig:throughput}
+\end{figure}
