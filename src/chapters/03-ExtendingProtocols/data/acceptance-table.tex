@@ -1,0 +1,71 @@
+\begin{table*}[t]
+    \centering
+    \caption{Percentage of annotated traffic received \textit{from} any other host and \textit{by} any other host. Grouped by option type and averaged per provider. Data collected from multiple types of experiments (expts).}
+    \label{extend:ops:table:ops-acceptance}
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        %% ROW 1
+        \multirow{3}{*}{\vtop{\hbox{\strut Protocol}\hbox{\strut (expts)}}}
+        & \multirow{3}{*}{Option}
+        & \multicolumn{10}{c|}{Acceptance Rate (\%)} \\
+        \hhline{~~*{10}{-}}
+        %% ROW 2
+        & & \multicolumn{5}{c|}{Received by} 
+          & \multicolumn{5}{c|}{Received from} \\
+        \hhline{~~*{10}{-}}
+        %% ROW 3
+        & & gcloud & aws & azure & docean & personal 
+          & gcloud & aws & azure & docean & personal  \\
+        \hline
+        %% IP ops group
+        \multirow{5}{*}{IP (8)}
+        % avg: dns, ftp, http, _________ x2, ntp, ping, tfo
+        & 4x NOP       & 0 & 3.00 & 0 & 5.50 & 4.37 & 1.50 & 1.75 & 1.00 & 4.25 & 4.37 \\
+        % avg: ___, ___, http, _________ x2, ntp, ping, ___
+        & Record Route & 0 & 3.25 & 0 & 6.00 & 5.00 & 1.37 & 1.75 & 2.00 & 4.25 & 4.37 \\
+        % > avg: dns, ___, http, nc-80-123 x2, ntp, ping, ___ 
+        & Timestamp    & 0 & 3.08 & 0 & 5.91 & 4.37 & 2.00 & 1.75 & 1.00 & 4.25 & 4.37 \\
+        % avg: dns, ftp, http, _________ x2, ntp, ping, tfo
+        & Experimental & 0 & 2.75 & 0 & 5.75 & 0 & 1.50 & 1.50 & 0.87 & 3.75 & 4.37 \\
+        % avg: dns, ftp, http, _________ x2, ntp, ping, tfo
+        & Unassigned   & 0 & 2.75 & 0 & 4.87 & 0 & 1.50 & 1.50 & 0 & 3.75 & 4.37 \\
+        \hline
+        %% TCP ops group
+        \multirow{6}{*}{TCP (4)}
+        % avg: ftp, http, nc-random, tfo
+        & 4x NOP       & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\
+        % avg: ftp, http, nc-random, tfo
+        & Echo         & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\
+        % avg: ftp, http, nc-random, tfo
+        & Echo-Reply   & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\
+        % avg: ___, http, _________, tfo
+        & Timestamp    & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\
+        % avg: ftp, http, nc-random, tfo
+        & Experimental & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\
+        % avg: ftp, http, nc-random, tfo
+        & Reserved     & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\
+        \hline
+        %% UDP ops group
+        \multirow{8}{*}{UDP (3)}
+        % avg: dns, ntp, nc-rnadom
+        & 4x NOP             & 0 & 68.00 & 75.00 & 75.00 & 73.33 & 0 & 74.83 & 72.00 & 71.33 & 72.50 \\
+        % avg: dns, ntp, nc-rnadom
+        % NOTE: between google and aws, unassigned-cc-1 passed with option removed
+        & 4x NOP \& CCO       & 0 & 68.50 & 75.00 & 74.83 & 73.33 & 0 & 74.66 & 72.50 & 71.33 & 72.50 \\
+        % avg: dns, ntp, nc-rnadom
+        & Timestamp          & 0 & 72.50 & 74.83 & 74.66 & 74.16 & 0 & 75.00 & 74.50 & 72.33 & 75.00 \\
+        % avg: dns, ntp, nc-rnadom
+        & Timestamp \& CCO    & 0 & 72.16 & 74.66 & 72.33 & 75.00 & 0 & 74.16 & 73.66 & 71.50 & 74.16 \\
+        % avg: dns, ntp, nc-rnadom
+        & Experimental       & 0 & 72.50 & 75.00 & 75.00 & 75.00 & 0 & 75.00 & 74.50 & 73.00 & 75.00 \\
+        % avg: dns, ntp, nc-rnadom
+        & Experimental \& CCO & 0 & 72.50 & 75.00 & 75.00 & 75.00 & 0 & 75.00 & 74.50 & 73.00 & 75.00 \\
+        % avg: dns, ntp, nc-rnadom
+        & Unassigned         & 0 & 72.50 & 75.00 & 75.00 & 75.00 & 0 & 75.00 & 74.50 & 73.00 & 75.00 \\
+        % avg: dns, ntp, nc-rnadom
+        & Unassigned \& CCO   & 0 & 72.50 & 75.50 & 75.00 & 74.16 & 0 & 75.00 & 74.50 & 72.16 & 75.00 \\
+        \hline
+    \end{tabular}
+    \end{adjustbox}
+\end{table*}

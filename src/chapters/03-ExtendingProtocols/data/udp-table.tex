@@ -1,0 +1,112 @@
+\begin{table*}[t]
+    \centering
+    \caption{Percentage of successful UDP option network traversals between any two cloud instances or our personal (p) server.}
+    \label{extend:ops:table:udp-options}
+    \hbox{
+    \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{|c|c|c|c c c c c|c c c c c|c c c c c|c c c c c|c|}
+        %% ROW 0 - dst
+        \hline
+        \multicolumn{3}{|c|}{Endpoint}
+        & \multicolumn{21}{c|}{destination} \\
+        \hhline{~*{23}{-}}
+        %% ROW 1 - providers
+        \multicolumn{1}{|c}{} & \multicolumn{2}{|c|}{Provider}
+        & \multicolumn{5}{c|}{gcloud}
+        & \multicolumn{5}{c|}{aws}
+        & \multicolumn{5}{c|}{azure}
+        & \multicolumn{5}{c|}{docean}
+        & \multicolumn{1}{c|}{p} \\
+        \hhline{~~*{22}{-}}
+        %% ROW 2 - regions
+        \multicolumn{1}{|c}{} & \multicolumn{1}{|c|}{} & Region
+            %%% gcloud regions
+            & \rotatebox[origin=c]{90}{us-east1}
+            & \rotatebox[origin=c]{90}{europe-west2}
+            & \rotatebox[origin=c]{90}{asia-southeast1}
+            & \rotatebox[origin=c]{90}{asia-northeast1}
+            & \rotatebox[origin=c]{90}{australia-southeast1}
+            %%% aws regions
+            & \rotatebox[origin=c]{90}{us-west-1}
+            & \rotatebox[origin=c]{90}{eu-central-1}
+            & \rotatebox[origin=c]{90}{ap-south-1}
+            & \rotatebox[origin=c]{90}{me-south-1}
+            & \rotatebox[origin=c]{90}{sa-east-1}
+            %%% azure regions
+            & \rotatebox[origin=c]{90}{canadacentral}
+            & \rotatebox[origin=c]{90}{centralus}
+            & \rotatebox[origin=c]{90}{koreacentral}
+            & \rotatebox[origin=c]{90}{francecentral}
+            & \rotatebox[origin=c]{90}{australiacentral}
+            %%% docean regions
+            & \rotatebox[origin=c]{90}{nyc1}
+            & \rotatebox[origin=c]{90}{fra1}
+            & \rotatebox[origin=c]{90}{sgp1}
+            & \rotatebox[origin=c]{90}{tor1}
+            & \rotatebox[origin=c]{90}{blr1}
+            %%% personal regions
+            & \rotatebox[origin=c]{90}{Bucharest} \\
+        \hline
+        %%% all encompassing column
+        \multirow{20}{*}{\rotatebox[origin=c]{90}{source}}
+        %%% gcloud rows
+        & \multirow{5}{*}{\rotatebox[origin=c]{90}{gcloud}}
+          & us-east1
+            & - & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        & & europe-west2
+            & 0 & - & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        & & asia-southeast1
+            & 0 & 0 & - & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        & & asia-northeast1
+            & 0 & 0 & 0 & - & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        & & australia-southeast1
+            & 0 & 0 & 0 & 0 & - & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        \hhline{~*{23}{-}}
+        %%% aws rows
+        & \multirow{5}{*}{\rotatebox[origin=c]{90}{aws}}
+          & us-east-1
+            & 0 & 0 & 0 & 0 & 0 & - & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 97 & 100 & 100 \\
+        & & eu-central-1
+            & 0 & 0 & 0 & 0 & 0 & 100 & - & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 97 & 100 & 100 \\
+        & & ap-south-1
+             & 0 & 0 & 0 & 0 & 0 & 100 & 100 & - & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 97 & 100 & 100 \\
+        & & me-south-1
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & - & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 97 & 100 & 100 \\
+        & & sa-east-1
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & - & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 97 & 97 & 95 \\
+        \hhline{~*{23}{-}}
+        %%% azure rows
+        & \multirow{5}{*}{\rotatebox[origin=c]{90}{azure}}
+          & canadacentral
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 87 & - & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 97 & 100 & 100 \\
+        & & centralus
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 87 & 100 & - & 100 & 100 & 100 & 100 & 100 & 100 & 97 & 100 & 100 \\
+        & & koreacentral
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 87 & 100 & 100 & - & 100 & 100 & 100 & 100 & 100 & 97 & 100 & 100 \\
+        & & francecentral
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 43 & 100 & 100 & 100 & - & 100 & 100 & 100 & 100 & 97 & 100 & 100 \\
+        & & australiacentral
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 87 & 100 & 100 & 100 & 100 & - & 100 & 100 & 100 & 97 & 100 & 100 \\
+        \hhline{~*{23}{-}}
+        %%% docean rows
+        & \multirow{5}{*}{\rotatebox[origin=c]{90}{docean}}
+          & nyc1
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 0 & 100 & 100 & 100 & 100 & 100 & - & 100 & 100 & 97 & 100 & 97 \\
+        & & fra1
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 87 & 100 & 100 & 100 & 100 & 100 & 100 & - & 100 & 97 & 100 & 100 \\
+        & & sgp1 
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 87 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & - & 97 & 100 & 100 \\
+        & & tor1
+            & 0 & 0 & 0 & 0 & 0 & 97 & 100 & 100 & 97 & 87 & 97 & 100 & 97 & 100 & 97 & 100 & 95 & 97 & - & 100 & 97 \\
+        & & blr1
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 0 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 97 & - & 95 \\
+        \hhline{~*{23}{-}}
+        %%% personal rows
+        & \multirow{1}{*}{\rotatebox[origin=c]{90}{p}}
+          & Bucharest
+            & 0 & 0 & 0 & 0 & 0 & 100 & 100 & 100 & 100 & 87 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 97 & 100 & - \\
+        \hline
+    \end{tabular}
+    \end{adjustbox}
+    }
+\end{table*}
