@@ -2,12 +2,6 @@
 \label{appfw:daf}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Problem statement}
-\label{appfw:daf:intro}
-
-\radu{TODO: introduce DAF}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Architecture}
 \label{apffw:daf:architecture}
 
@@ -176,36 +170,4 @@ In the same figure we also depict the throughput of \daf{} on the 10-Gigabit ser
 \input{data/nuc-throughput}
 
 Observing the measurements on the Intel NUC mini-PC from Figure \ref{appfw:daf:fig:nuc-throughput}, we conclude that it is significantly easier to obtain near-linerate throughput both when annotating traffic and when only performing packet filtering. These results are in part due to the single CPU core speed, motivated by the fact that \daf{} is not multi-threaded. We note that the Intel driver for gigabit network adapters (i.e., \texttt{e1000e}) imposes a minimum MTU value of 604 bytes. Any attempt to set a lower value is met with a reset of the network interface, coupled with a silent override of the MTU, using this lower limit.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Discussion}
-\label{appfw:daf:discussion}
-
-\subsubsection{Key management using GNU Privacy Guard}
-\label{appfw:daf:gpg}
-
-GNU Privacy Guard (GPG) is one of the more prevalent implementations of the OpenPGP standard \cite{rfc4880}, adhering to the "web of trust" model, rather than the Public Key Infrastructure (PKI) \cite{maurer1996modelling} alternative. Early in the development of our prototype, we considered employing \texttt{GPGME} for the more sensitive cryptographic operations. \texttt{GPGME} is a wrapper library over the OpenPGP backend, and constitutes the recommended method of integrating GPG functionalities into other applications. The primary reason why we chose GPG stands in its key and identity management mechanisms. The identity of the user is inextricably linked to his or her private key. At that time, we intended to allow the user to lend our firewall access to this private key by means of the GPG agent (a keystore caching daemon). In doing so, we would avoid retaining the private key in the memory of a yet-untested prototype.
-
-Nonetheless, we quickly realized that \texttt{GPGME} could not be a permanent solution. While some library calls only change internal states (e.g.: selecting the pinentry mode or cryptographic engine), active key selection as well as signature generation and verification spawn multiple background processes which \texttt{exec()} on each individual query. Although the intended cryptographic operations are in and of themselves computationally taxing, repeatedly spawning new processes for each packet would ultimately prove impractical.
-
-
-\subsubsection{Netfilter Queue bug}
-\label{appfw:daf:bug}
-
-During the development of our \texttt{iptables} module for \daf{}'s integration in existing environments, we discovered an inssue with how the NetfilterQueue kernel module handles changes to its packet buffer.
-
-Whenever a packet matches a Netfilter rule with a NFQ target, it is temporarily placed in the receive buffer of a netlink socket. Even when a process reads this packet into userspace (partially or integrally) for the purpose of performing Deep Packet Inspection, a copy of the packet will still reside in kernel space pending a verdict. If affirmative, the stored packet is reinjected into the kernel network stack with a minimal amount of memory copy operations. However, when the verdict is predicated on overwriting the packet buffer with a version specified by the deciding process, certain fields of the \texttt{sk\_buff} structure can be rendered invalid.
-
-Whenever we inject an IP options section on verdict transmission, we effectively increase the size of the Layer 3 header by a maximum of 40 bytes. Consequently, the Layer 4 header is shifted relative to the beginning of the Network header. Normally this would not pose a problem, especially after the packet is emitted from the local system. Nonetheless, during the development of our \texttt{iptables} plugin, we discovered that using the \texttt{tcp\_hdr()} macro to obtain a reference to the TCP header would yield incorrect results on the originating system but not on other endpoints. We initially wanted to test the soundness of our implementation by matching the packet that we modified on the OUTPUT chain on its way out, on the POSTROUTING chain with a LOG jump target.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth,keepaspectratio]{figures/daf-nfq-bug.pdf}
-    \caption{TCP header mismatch due to IP header resize with NFQ.}
-    \label{appfw:daf:fig:nfq-bug}
-\end{figure}
-
-However, the recommended API for accessing the Transport header would calculate its location based on the value of the \texttt{transport\_header} field that is stored in the \texttt{sk\_buff} structure. Since the Netfilter Queue kernel module does not account for variable protocol header sizes, this field remains unchanged. The result is that our Layer 4 payload digest was being calculated on a buffer whose starting position was incorrect (see Fig. \ref{appfw:daf:fig:nfq-bug}). Instead of adding the Data Offset (as number of dwords) to the start of the TCP header (which is dependent on the true length of the IP header), a random number that coincided with a high nibble in the stored SHA256 HMAC (the $33^{rd}$ byte in the updated IP header) was instead used as offset from the \textit{base} IP header. This lead to a mismatch during the HMAC verification.
-
-Not only could this have resulted in an illegal memory access albeit in very specific circumstances, but other Xtables modules that make reference to Layer 4 fields may potentially be susceptible to this issue. Although it would be hard for a malicious user to mount an attack using this bug, we surmise that one could inject a fake TCP header as a 20-byte IP options section. Any POSTROUTING rules (e.g. network address translation) would end up matching the fake fields instead of the actual header. At the moment it is unclear how this vulnerability could be further leveraged to benefit a potential attacker or whether it needs to be patched. Because it does not directly relate to the issue at hand, we decided to revisit it at a later time.
 

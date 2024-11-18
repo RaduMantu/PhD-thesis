@@ -1,0 +1,33 @@
+\begin{figure}[h]
+    \centering
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            width             = \textwidth,
+            height            = 6cm,
+            at                = {(0,0)},
+            xmin              = 600,
+            xmax              = 9300,
+            ymin              = 0,
+            xtick distance    = 2000,
+            grid              = both,
+            xlabel            = {MTU [bytes]},
+            ylabel            = {Throughput [Mbps]},
+            legend style      = {at={(0.97,0.15)}, anchor=east},
+            legend cell align = left,
+        ]
+            \addplot[color=RoyalBlue, very thick]
+                table[x=mtu, y=sigRUS-usenix, col sep=comma]
+                {src/chapters/05-SignatureFirewall/data/cocos-throughput.csv};
+            \addlegendentry{RUS+sig (epoll)}
+
+            \addplot[color=OliveGreen, very thick]
+                table[x=mtu, y=sigRUS-esorics, col sep=comma]
+                {src/chapters/05-SignatureFirewall/data/cocos-throughput.csv};
+            \addlegendentry{RUS+sig (io\_uring)}
+        \end{axis}
+    \end{tikzpicture}
+
+    \caption{\daf{} throughput on the IBM system with signature-based packet tagging.}
+    \label{sign:linux:fig:cocos-throughput}
+\end{figure}

@@ -1,0 +1,38 @@
+\begin{figure}[h]
+    \centering
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            width             = \textwidth,
+            height            = 7cm,
+            at                = {(0,0)},
+            xmin              = 600,
+            xmax              = 2000,
+            ymin              = 300,
+            xtick distance    = 200,
+            grid              = both,
+            xlabel            = {MTU [bytes]},
+            ylabel            = {Throughput [Mbps]},
+            legend style      = {at={(0.97,0.15)}, anchor=east},
+            legend cell align = left,
+        ]
+            \addplot[color=Goldenrod, very thick]
+                table[x=mtu, y=baseline, col sep=comma]
+                {src/chapters/05-SignatureFirewall/data/nuc-throughput.csv};
+            \addlegendentry{baseline}
+
+            \addplot[color=NavyBlue, very thick]
+                table[x=mtu, y=RUSu-pktsig, col sep=comma]
+                {src/chapters/05-SignatureFirewall/data/nuc-epoll-multiple.csv};
+            \addlegendentry{RUS+sig (epoll)}
+
+            \addplot[color=OliveGreen, very thick]
+                table[x=mtu, y=sigRUS-esorics, col sep=comma]
+                {src/chapters/05-SignatureFirewall/data/nuc-throughput.csv};
+            \addlegendentry{RUS+sig (io\_uring)}
+        \end{axis}
+    \end{tikzpicture}
+
+    \caption{\daf{} throughput on Intel NUC with signature-based packet tagging.}
+    \label{sign:linux:fig:nuc-throughput-new}
+\end{figure}
