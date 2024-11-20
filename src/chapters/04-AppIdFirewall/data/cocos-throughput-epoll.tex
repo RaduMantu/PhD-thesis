@@ -9,47 +9,47 @@
             xmin              = 0,
             xmax              = 9710,
             ymin              = 0,
-            ymax              = 10,
+            ymax              = 6,
             xtick distance    = 1000,
             ytick distance    = 1,
             grid              = both,
             xlabel            = {MTU [bytes]},
             ylabel            = {Throughput [Gbps]},
             legend columns    = 7,
-            legend style      = {at={(0.11,1.05)}, anchor=south west}
+            legend style      = {at={(0.15,1.05)}, anchor=south west}
         ]
-            \addplot[color=Goldenrod, very thick]
-                table[x=mtu, y=baseline, col sep=comma]
-                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
-            \addlegendentry{baseline}
-
             \addplot[color=Rhodamine, very thick]
-                table[x=mtu, y=unopt, col sep=comma]
-                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+                table[x=mtu, y=vanilla, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput-epoll.csv};
             \addlegendentry{unopt}
 
             \addplot[color=Red, very thick]
                 table[x=mtu, y=R, col sep=comma]
-                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput-epoll.csv};
             \addlegendentry{R}
 
             \addplot[color=Purple, very thick]
                 table[x=mtu, y=RU, col sep=comma]
-                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput-epoll.csv};
             \addlegendentry{RU}
 
             \addplot[color=Green, very thick]
                 table[x=mtu, y=RUS, col sep=comma]
-                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput-epoll.csv};
             \addlegendentry{RUS}
 
+            \addplot[color=RoyalBlue, very thick]
+                table[x=mtu, y=RUSu, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput-epoll.csv};
+            \addlegendentry{RUSu}
+
             \addplot[color=Orange, very thick]
-                table[x=mtu, y=RUSB, col sep=comma]
-                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
-            \addlegendentry{RUSB}
+                table[x=mtu, y=RUSuPb, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput-epoll.csv};
+            \addlegendentry{RUSuB}
         \end{axis}
     \end{tikzpicture}
 
-    \caption{\daf{} throughput on IBM system (\texttt{io\_uring} version).}
-    \label{appfw:daf:fig:cocos-throughput}
+    \caption{\daf{} throughput on IBM system (\texttt{epoll} version).}
+    \label{appfw:daf:fig:cocos-throughput-epoll}
 \end{figure}

@@ -10,7 +10,7 @@
 
 One of the core elements that comprise our solution revolves around correctly identifying the process that generated an outgoing packet. Since this information is usually associated to the socket that performed the \texttt{send()} operation, it follows that it would be readily available at the Application Layer Enforcement (ALE) stage of the WFP Filtering Engine (see Figure \ref{sign:windows:fig:wfp}). More specifically, a callout from the \texttt{FWPM\_LAYER\_ALE\_AUTH\_CONNECT\_V4} layer is capable of blocking both outgoing TCP connections, and non-TCP traffic based on the first emitted packet.
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics
         [width=1.0\textwidth, keepaspectratio]
@@ -39,7 +39,7 @@ Our solution takes advantage of the fact that part of the processing done by the
 
 Following the identification of the originating process, our system was intended to generate proof of authenticity and integrity of the payload. To this end, we utilized the BCrypt family of cryptographic primitives to calculate a SHA256 HMAC for each packet. We selected this variant instead of NCrypt due to the fact that the HMAC shared secret could be considered to have already been loaded in memory as a parameter to the kernel module. Nonetheless, we regard NCrypt as a viable alternative if the requirement of integrating a Key Storage Provider ever arises. Regardless, the digest of the Message Authentication code was calculated based on the TCP payload as well as the Sequence Number, so as to prevent replay attacks.
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics
         [width=1.0\textwidth, keepaspectratio]
@@ -73,7 +73,7 @@ For the purpose of testing our Linux-based filtration mechanism, we have impleme
 \subsubsection{Performance considerations}
 \label{sign:windows:evaluation:performance}
 
-Despite the security assurances that our system provides, a decline in throughput is to be expected. This can be observed in Figure \ref{fig:throughput}, by comparing the average data throughput of ten second \texttt{iperf3} TCP transmissions, with and without annotations. These measurements have further been averaged across five different rounds of testing. Although the process identification feature is not particularly costly from a computational standpoint, calculating the SHA256 digest and replacing the contents of the send buffer by injecting the experimental TCP option can be detrimental. Based on our experiments we estimate that our kernel module imposes an upper bound of approx. 400Mbps on outgoing network transmissions. Note however that this limit may vary depending on the characteristics of the underlying testing environment (e.g., hardware implementation of cryptographic primitives, CPU frequency, etc. )
+Despite the security assurances that our system provides, a decline in throughput is to be expected. This can be observed in Figure \ref{sign:windows:fig:throughput}, by comparing the average data throughput of ten second \texttt{iperf3} TCP transmissions, with and without annotations. These measurements have further been averaged across five different rounds of testing. Although the process identification feature is not particularly costly from a computational standpoint, calculating the SHA256 digest and replacing the contents of the send buffer by injecting the experimental TCP option can be detrimental. Based on our experiments we estimate that our kernel module imposes an upper bound of approx. 400Mbps on outgoing network transmissions. Note however that this limit may vary depending on the characteristics of the underlying testing environment (e.g., hardware implementation of cryptographic primitives, CPU frequency, etc. )
 
 \input{data/throughput}
 

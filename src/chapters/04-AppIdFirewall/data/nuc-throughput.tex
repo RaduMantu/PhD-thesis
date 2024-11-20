@@ -1,4 +1,4 @@
-\begin{figure}
+\begin{figure}[h]
     \centering
 
     \begin{tikzpicture}
@@ -25,10 +25,6 @@
                 table[x=mtu, y=RUSB, col sep=comma]
                 {src/chapters/04-AppIdFirewall/data/nuc-throughput.csv};
             \addlegendentry{RUSB}
-
-            % \addplot[color=RoyalBlue, very thick]
-            %     table[x=mtu, y=sigRUS, col sep=comma]{data/nuc-throughput.csv};
-            % \addlegendentry{RUS+sig}
         \end{axis}
     \end{tikzpicture}
 
