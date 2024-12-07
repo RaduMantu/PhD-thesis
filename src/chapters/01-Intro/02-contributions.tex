@@ -1,0 +1,48 @@
+\section{Thesis Contributions}
+\label{intro:contributions}
+
+In this thesis, we provide a comprehensive solution to application awareness
+in the form of a distributed firewall. This firewall has been implemented from
+scratch and has two additional variants that are more limited in scope but serve
+as proof of concepts for future efforts. Additionally, we propose a packet
+annotation scheme that allows our firewall to convey proof of compliance for
+emitted traffic to other instances of the same firewall or Intrusion Detection
+and Prevention Systems or existing software firewalls.
+
+We claim the following contributions:
+
+\begin{itemize}
+    \item \textbf{Evaluation of protocol option acceptance in the Internet:}
+          By implementing a traffic annotation tool with IP, TCP and UDP options,
+          we perform reachability tests between 21 sites across the globe, and
+          four cloud providers as well as our university.
+    \item \textbf{Implementation of an application-aware distributed firewall:}
+          We offer multiple variants of this firewall. The primary version is
+          developed for Linux and runs strictly in userspace. A kernel-based
+          alternative offers fewer features but demonstrates singificant
+          performance increase. The third variant represents a proof of concept
+          implementation for Windows systems.
+    \item \textbf{Evaluation in realistic environments:} We test our Linux-based
+          firewall implementations in both datacenter environments, on servers
+          with 10Gbps NICs, as well as desktop environments, on Intel NUC
+          systems with 1Gbps NICs. We offer the user the option of tuning the
+          firewall and select what security compromises are tolerable for the
+          purpose of increasing performance.
+    \item \textbf{Packet annotation scheme and comliance verification:} We
+          propose a packet annotation scheme based on protocol options. Although
+          we evenutally decided on IP options as a conduit for the proof of
+          compliance attached to each packet, we discuss the current limitations
+          of TCP and UDP options that prevented us from implementing a Transport
+          Layer alternative, as well as the current efforts of IETF working
+          groups to remedy them.
+    \item \textbf{Network integration solutions:} In order to integrate our
+          packet annotation scheme in existing networks without the need to
+          deploy our firewall on more hosts than necessary, we have implemented
+          \texttt{iptables} and \texttt{snort3} modules that are able to
+          verify the proof of compliance attached to each packet.
+    \item \textbf{Overview of the state of the art in Network Fuzzing:}
+          We explore the possibility of employing fuzzing as an additional
+          measure for ensuring the security of the applications that we
+          whitelist in our firewall policies.
+\end{itemize}
+

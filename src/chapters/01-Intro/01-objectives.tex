@@ -1,0 +1,47 @@
+\section{Thesis Objectives}
+\label{intro:objectives}
+
+In our work, we revisit a concept briefly explored at the beginning of the 2000s,
+namely Distributed Firewalls \cite{ioannidis2000implementing}. At the time, this
+design posed numerous difficulties in terms of scalability, management, and
+network integration. As a result, the industry distanced itself from this
+approach and instead adopted the monolithic firewall architecture. In recent
+years however, this model has become too restrictive. Where VLANs were once
+sufficient for network segmentation, micro-segmentation is now steadily gaining
+traction. Where internal networks were previously considered homogenous, mobile
+devices are now free to transition between one another. As a response to these
+changes, we have observed renewed efforts \cite{bringhenti2022optimizing,
+tudosi2022secure, bagheri2020dynamic} towards solving those initial challenges
+that discouraged the adoption of the distributed firewall paradigm.
+
+We believe that distributed firewalling has the potential of offering an alternative
+to application identification based on TLS decryption. Our aim is to demonstrate
+that similar security guarantees can be provided without compromising user
+privacy. To this end, we enumerate the following objectives that we aim to
+accomplish in our work:
+
+\begin{enumerate}
+    \item \textbf{Study existing technologies used in ensuring network security:}
+          Assess their utility, limitations and development challenges.
+    \item \textbf{Implement a distributed firewall:} This firewall must be able
+          to determine process identity by leveraging local operating system
+          level knowledge, and allow rule configuration based on this information.
+    \item \textbf{Identify a method of conveying network traffic compliance with
+          filtration rules:} Any endpoint host or middlebox must be able to
+          recognize traffic that has been verified on egress from its source
+          system. Proof of comliance must be attached to each packet.
+    \item \textbf{Explore methods of network integration:} Both our firewall and
+          traffic annotation method must be easy to adopt and must not interfere
+          with existing communication software stacks.
+    \item \textbf{Assess development difficulty based on target operating system:}
+          Although most servers and middleboxes are running Linux-based
+          distributions, most users utilize Windows. In order to achieve
+          standardization in IT networks, both will need to be supported to
+          some degree.
+   \item \textbf{Evaluate performance overhead in realistic environments:}
+          Determine what are the resource requirements for running the firewall
+          on a given system and what impact its integration will have on the
+          network as a whole. Identify compromises that can be made in favor of
+          performance.
+\end{enumerate}
+
