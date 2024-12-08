@@ -40,7 +40,7 @@ Another method of reducing execution time is implementing a \textit{fork server}
 \begin{itemize}
     \item The fork server can be used at arbitrary points in the program. While initially used strictly to quickly reset the process to what was considered its initial state, the same solution can be applied at any point during the execution. On one hand, establishing such reset paths could be used to avoid repeated passes through "uninteresting" sections of code. On the other hand, executing code that does not cause context switches may prove less taxing than employing the fork server. The correct choice in this regard is highly dependent on the nature of the SUT, so this determination is best left to the user.
 
-    \item As described until this point, the fork server is not adaptable to any situation. For example, if the SUT is a kernel module, it cannot benefit from the same functionalities that are offered to a userspace process. However, recent advancements have introduced hypervisor-assisted approaches that help expand the area of applicability of techniques such as the fork server. We explore this topic further in section \ref{sec:survey}.
+    \item As described until this point, the fork server is not adaptable to any situation. For example, if the SUT is a kernel module, it cannot benefit from the same functionalities that are offered to a userspace process. However, recent advancements have introduced hypervisor-assisted approaches that help expand the area of applicability of techniques such as the fork server. We explore this topic further in section \ref{extend:netfuzz:survey}.
 \end{itemize}
 
 %% Component #3
