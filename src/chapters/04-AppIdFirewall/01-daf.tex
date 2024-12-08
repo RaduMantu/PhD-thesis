@@ -2,6 +2,37 @@
 \label{appfw:daf}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Problem statement}
+\label{apffw:daf:intro}
+
+In this first iteration of our distributed firewalling solution, we consider the
+following research questions:
+
+\textbf{RQ1: Reliable endpoint data source for NGFWs?} Micro-segmentation is a foundational component of zero-trust architectures. In contrast to traditional methods such as VLANs, micro-segmentation ensures network compartmentalization based on application layer visibility. However, most solutions today rely on the application classification features of NGFWs. We propose that one method of alleviating the over-reliance on TLS traffic decryption is by providing a pertinent, alternative data source that can uniquely identify endpoint applications and correctly associate this information with intercepted packets.
+
+\textbf{RQ2: Compatibility with loosely defined networks?} In keeping with initiatives such as BeyondCorp, we take into account the fact that users could not only transition between internal networks, but also access resources from beyond the conventional network perimeter. As a result, we adopt a stateless Layer 3 traffic annotation mechanism and discuss possible improvements with regard to public network traversal.
+
+\textbf{RQ3: Impact on network integrity and performance?} Ideally, a solution to the previous two questions would have minimal impact on both the network and individual hosts. Although certain concessions can ofttimes be made in favor of better security guarantees, we acknowledge the necessity for unobtrusive integration with pre-existing software stacks, as well as marginal downgrades in throughput. To this end, we aim to provide a prototype that is easily tunable to fit the unique requirements of each user.
+
+In order to address these questions we propose \daf{}, a distributed application firewall \cite{ioannidis2000implementing} prototype capable of filtering traffic based on application identity. Its main characteristics are as follows:
+
+\textbf{Originating process identification:} In contrast to existing solutions, we adopt a more discerning stance on how we distinguish applications from one another. We do not simply rely on the content extracted from processed packets to infer the identity of the originator. Instead, we determine all processes that had access to the socket that was used to emit a certain packet (a common occurrence in highly complex applications). Moreover, we are able to account for any object that was mapped in the virtual address space of said processes and use them as rule matching criteria. This approach is motivated by recent advances in attaining reproducible builds \cite{butler2023business} for both open and closed source software. One application of this feature is the ability to filter traffic that originated from processes that use a known vulnerable version of a certain library (e.g. \texttt{libssl} for traffic encryption). Alternatively, whitelists can be defined based on sets of binaries that comprise specific applications.
+
+\textbf{Packet annotation:} In order to communicate that a packet had passed through \daf{} on the originating endpoint, we attach a Message Authentication Code (MAC). The MAC is embedded into the packet as an IP option, making our system connectionless. This allows the destination endpoint or any middleboxes that are aware of this annotation scheme to verify the authenticity of the received traffic. Alternatively, we attach an aggregate hash of all memory-mapped objects that comprised the originating process. This latter approach has a number of practical uses, e.g. allowing a system administrator to dictate the exact application and version one process is allowed to communicate with. Another function that could be served is that of a more general and reliable replacement of user-agent identification.
+
+\textbf{Compatibility with container-based isolation:} Due to the widespread adoption of microservice architectures, we deemed it necessary to ensure that \daf{} could function across namespace boundaries. As a result, we demonstrate that our firewall can apply fine-grained filtration rules in Docker-based environments. This approach has the added benefit of isolating the firewall process from potentially malicious processes, to a certain degree.
+
+We claim the following contributions:
+
+\begin{itemize}
+    \item The implementation of \daf{} \footnote{Code available at \url{https://github.com/RaduMantu/DAF}}, a network firewall capable of filtering and authenticating traffic based on the identity of the endpoint processes, regardless of namespace isolation.
+
+    \item The integration of \daf{} with pre-existing firewalls (\texttt{iptables}) and Intrusion Prevention Systems (\texttt{snort3}), illustrating its potential for interoperability with existing traffic filtering technologies.
+
+    \item An analysis of the inherent limitations of \texttt{NetfilterQueue} and the optimization techniques necessary for achieving satisfying throughputs for both consumer grade hardware as well as datacenter environments.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Architecture}
 \label{apffw:daf:architecture}
 
@@ -69,7 +100,7 @@ The SHA256 digest itself is calculated based on the backing file of a memory map
 Alongside the process identity matching mechanism, \daf{} also implements filtering based on IPs in CIDR notation, ports and Layer 4 protocol. These can all be configured by the \daf{} companion app, analogous to \texttt{iptables} itself. In addition to listing and managing rules, \daf{} is also capable of computing hashes and aggregate hashes for binaries and shared objects. This functionality was added to simplify the rule construction procedure.
 
 \begin{lstlisting}[
-    style=bashstyle,
+    % style=bashstyle,
     caption={\daf{} rule configuration with companion app},
     label={appfw:daf:lst:rule}]
 $ ctl-fw                                           \
@@ -87,7 +118,7 @@ $ ctl-fw                                           \
 Listing \ref{appfw:daf:lst:rule} is an example of \daf{} rule that targets all local processes that run in the current network namespace and make use of the \texttt{curl} base binary. The rule prevents these processes from generating TCP traffic to ports other than 80 in a given subnet. For performing an exact match on \texttt{curl} in such way as to include its shared objects dependencies, the \texttt{-{}-agg-hash} flag can be used instead of \texttt{-{}-sng-hash}. Here, the companion app can be used to calculate the aggregate hash that should be passed as a parameter (see Listing \ref{appfw:daf:lst:hash}).
 
 \begin{lstlisting}[
-    style=bashstyle,
+    % style=bashstyle,
     caption={Aggregate hash calculation},
     label={appfw:daf:lst:hash}]
 $ ctl-fw $(ldd /usr/bin/curl \

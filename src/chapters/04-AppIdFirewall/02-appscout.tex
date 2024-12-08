@@ -2,6 +2,21 @@
 \label{appfw:appscout}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Problem statement}
+\label{apffw:appscout:intro}
+
+In this section, we depart from the user space frewall model previously introduced with \daf{}. Although the aforementioned research questions still stand, we expore alternative approach that would allow faster packet verdict calculation. As such, we present \scout{}, a Linux Kernel Module (LKM) capable of monitoring system-wide events such as memory mapping executable binary sections or modifying permissions at runtime. \scout{} uses these sources of information to build persistent profiles for each process. These profiles contain information that can be used to identify each executable code section that was available to any process during their entire runtime. Additionally, we created an \texttt{iptables} extension that can utilize these profiles to achieve application awareness. Finally, we integrated a Netlink subsystem into \scout{} in order for userspace applications to query its profile database for the purpose of aiding security audits.
+
+We claim the following contributions:
+\begin{itemize}
+    \item The implementation of \scout{}\footnote{Code available at \url{https://github.com/RaduMantu/AppScout}}, an application identity monitoring LKM.
+
+    \item The development of an \texttt{iptables} extension that itegrates with \scout{}.
+
+    \item An analysis of our integration effort into live systems, without necessitating a kernel recompilation.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Architecture}
 \label{apffw:appscout:architecture}
 
