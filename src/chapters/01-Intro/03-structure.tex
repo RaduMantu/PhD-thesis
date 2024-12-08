@@ -1,4 +1,87 @@
 \section{Thesis Structure}
 \label{intro:structure}
 
-\radu{TODO}
+This thesis is structured as follows:
+
+In Chapter \ref{background:chapter} we discuss a number of concepts and
+technologies that are referenced in this thesis. Section \ref{background:firewall}
+presents technical information regarding the Netfilter framework and
+\texttt{Netfilter Queue} in particular. This represents the basis for most
+Intrusion Detection and Prevention Systems are implemented on Linux. Additionally,
+we introduce concepts employed in state of the art, industrial grade firewalls.
+Because this technology is often proprietary and the code is closed-source, we
+mainly reference white papers and technical reports. Section \ref{background:protocols}
+describes the logic behind the Layer 3 and Layer 4 protocol extension mechanisms
+we took under consideration for our annotation scheme. Section \ref{background:difc}
+offers a brief introduction to Distributed Information Flow Control and
+distinguishes the annotation mechanisms specific to this type of systems from
+ours.
+
+Chapter \ref{extend:chapter} presents our efforts toward making an informed
+selection in terms of a conduit for traffic annotation. In Section \ref{extend:ops}
+we present our traffic annotator, a user space application capable of intercepting
+packets and annotating them with IP, TCP or UDP options. These options are
+specified by the user as a sequence of codepoints that are expanded in an
+arbitrary manner. In addition to this tool, we offer an analysis of our protocol
+options acceptance excepriments. This analysis includes reachability tests between
+multiple cloud hosted instances located at different geographical locations,
+across multiple cloud providers. For the purpose of reproducibility, we include
+our experiment orchestration and analysis tools. Section \ref{extend:netfuzz}
+represents a state of the art overview regarding network fuzzing. Because our
+firewall is reponsible only for enforcing filtration policies based on application
+identity, monitoring the internal state of running processes for the purpose of
+anomaly detection falls outside its purview. Consequently, we asses the viability
+of fuzzing network applications as a method of ensuring the soundness of any
+whitelisted application prior to its deployment in live environments. This
+section constitutes a preliminary overview. We discuss our future plans in
+Chapter \ref{conclusion:chapter}.
+
+In Chapter \ref{appfw:chapter} we present implementation details for the two
+main variants of our distributed application firewall. Section \ref{appfw:daf}
+contains the design, implementation details and evaluation of \daf{}, our most
+feature-complete prototype. \daf{} runs exclusively in userspace (with the
+exception of a few eBPF syscall probes) and makes use of \texttt{Netfilter Queue}
+in a manner similar to \texttt{snort3} in intrusion prevention mode. In this
+section we discuss the technical limitations of the available Linux kernel
+interfaces for the purpose of deep packet inspection and cross-namespace
+network management. Additionally, we offer a comprehensive analysis of the
+impact \texttt{Netfilter Queue} has on performance, methods of handling its
+idiosyncrasies, and design limitations that would need to be addressed in a
+overhaul of the entire system. Section \ref{appfw:appscout} introduces \scout{},
+a partial reimplementation of \daf{} as a kernel module. The reason why \daf{}
+was designed to run exclusively in user space was for ease of integration
+with existing systems, even those whose kernel was under lockdown (i.e., could
+not be modified by the insertion of modules after boot). After assessing the
+challenges in further optimizing \daf{}, we decided to relax this constraint
+and permit the use of kernel modules without requiring the recompilation of the
+kernel itself. Consequently, our alternative solution makes use of kprobes to
+perform dynamic instrumentation on certain common paths of system call handlers
+(e.g.: that of \texttt{mmap()} and friends). Under this model, the filtration
+mechanism is no longer implemented in user space, but instead as an \texttt{iptables}
+plugin, in kernel space.
+
+In Chapter \ref{sign:chapter} se describe our packet annotation scheme. This
+annotation scheme has the purpose of attaching proof of compliance with the
+distributed firewall policy to individual packets. Alternatively, the limited
+protocol header space can be used to provide middleboxes or conventional
+(programmable) firewalls with information regarding the originating application.
+Section \ref{sign:linux} focuses on the implementation of this feature as part
+of \daf{}. In addition to a comprehensive description of the packet interception
+and modification mechanism, we also describe the integration of our annotation
+scheme with \texttt{iptables} and \texttt{snort3} for verification purposes.
+Section \ref{sign:windows} contains a proof of concept implementation of the
+annotation scheme on Windows, using the Windows Filter Engine. A notable
+difference between the Linux and Windows implementations is that the former
+embeds the tags within the IP header, while the latter does so within the TPC
+header, as an experimental TCP option. This decision was made in order to ensure
+that the Windows TCP/IP stack does not drop the traffic due to lack of support
+for IP options. The \texttt{iptables} module used for validation was adapted to
+work with TCP options instead of IP.
+
+Chapter \ref{conclusion:chapter} concludes this thesis. Section
+\ref{conclusion:summary} provides a summary of our work. Section
+\ref{conclusion:contrib} reiterates our main contributions. Section
+\ref{conclusion:future} outlines our immediate future goals, based on the
+outcome of this thesis. Section \ref{publications:chapter} contains a list of
+our publications that support the claims of this thesis.
+
