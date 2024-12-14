@@ -1,2 +1,62 @@
 \section{Contributions}
 \label{conclusion:contrib}
+
+In support of this thesis, we claim a number of contributions that address
+emerging issues with firewall technologies. These are as follows:
+
+\begin{enumerate}
+    \item \textbf{Evaluation of protocol option acceptance in the Internet:}
+    We implemented \texttt{ops-inject} \cite{mantu2024framework}, a network
+    traffic annotator based on Netfilter Queue that can attach arbitrary
+    interpretations of IP, TCP or UDP options to outgoing packets. We then
+    utilized this tool to perform all-to-all reachability tests between 21
+    hosts with a diverse geographic distribution, from moultiple cloud providers.
+    This study helped clarify the current state of options acceptance in the
+    Internet and informed our choice of conduit for network traffic tagging.
+
+    \item \textbf{Implementation of an application-aware distributed firewall:}
+    We implemented \daf{} \cite{mantu2024process} and \scout{} \radu{citation needed},
+    two state of the art firewalls capable of filtering traffic based on the
+    identity of the endpoint application without performing deep packet inspection
+    or performing traffic decryption. Through these two alternatives, one
+    bound to user space and the other designed as a kernel module, we attain near
+    linereate throughputs while also accounting for microservice architecutres
+    by supporting Linux namespace transparency.
+
+    \item \textbf{Evaluation in realistic environments:} We tested our two Linux
+    variants on both desktop systems with 1Gbps NICs, as well as datacenter
+    environments with 10Gbps NICs. We performed an in-depth inspection of Netfilter
+    Queue, an entrenched kernel mechanism that allows IDS and IPS to perform
+    deep packet inspection in userspace. Based on our observations and experience
+    researching this topic \cite{gherghescu2024ve}, we propose a number of
+    improvements that could further increase its performance and bridge the gap
+    between a kernel-only solution and a userspace firewall. Additionally, we
+    identify potential security risks that this technology may unknowingly introduce.
+
+    \item \textbf{Packet annotation scheme and compliance verification:}
+    We propose a packet annotation scheme based primarily on IP options. This
+    traffic tagging mechanism is fully implemented in \daf{} and serves to
+    enable middleboxes to verify the compliance of individual pakets with the
+    firewall policies of its originating system. We also provide a Windows
+    prototype \cite{gherghita2024label} that serves to demonstrate the
+    portability of our solution and the possibility of utilizing TCP options as
+    a conduit in restrictive networks where IP options are blocked.
+
+    \item \textbf{Network integration solutions:} In order to facilitate easier
+    adoption, we designed \daf{} with as few deployment requirements as
+    possible. This includes a lack of kernel components, making it an ideal
+    choice for systems employing the lockdown LSM. Additionally, we provide
+    a \texttt{snort3} plugin for matching and verifying HMAC annotations as
+    IP options, as well as \texttt{iptables} plugins serving the same purpose
+    for both the IP option conduit, and for the TCP option conduit. These
+    extensions allow users to deploy our firewall on a small subset of hosts and
+    perform on the path compliance verification using conventional tools.
+
+    \item \textbf{Overview of the state of the art in Network Fuzzing:}
+    By applying our previous experience in fuzzer development \cite{nikolic2021refined},
+    we explore the current challenges of employing network fuzzing
+    \cite{mantu2023network} as a method of reinforcing the trust placed in a
+    whitelisted application. This serves as our recommendation for adopters of
+    \daf{} that need to deploy their own proprietary solutions or custom builds
+    of OSS without deterministic compilation.
+\end{enumerate}

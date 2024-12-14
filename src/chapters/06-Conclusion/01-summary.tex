@@ -1,4 +1,65 @@
 \section{Thesis Summary}
 \label{conclusion:summary}
 
-TODO
+In Chapter \ref{background:chapter} we \radu{TODO}.
+
+In Chapter \ref{extend:chapter} we explored the viability of using protocol
+options as a conduit for attributing originating process identity information
+to network traffic. Additionally, we investigated the challenges that may arise
+if fuzzing was to be employed for guaranteeing the soundness of whitelisted
+applications. This was achieved by means of a state-of-the-art survey regarding
+network fuzzing. Meanwhile, the former of the two objectives was accomplished by
+performing IP, TCP and UDP options acceptance tests in the Internet. For this
+purpose, we created \texttt{ops-inject}, a packet annotation tool that either
+created or replaced existing options with a sequence of TLV tuples arbitrarily expanded
+framework a series of user-specified codepoints. Our experiments focused on measuring
+successful packet traversal of public networks while carrying different options.
+To this end, we have staged all-to-all experiments between 21 servers hosted
+locally in our university and across multiple georgraphic regions, from four
+different cloud providers: Microsoft Azure, AWS, Google Cloud and Digital Ocean.
+
+Chapter \ref{appfw:chapter} presents two distinct implementations of our
+firewalling engine: one implemented as a userspace process with eBPF syscall
+probes, the other implemented as a kernel module with jump optimized kprobe
+instrumentation. Our initial design focused on ease of adoption. We considered
+a heavily constrained deployment environment, whose kernel was under lockdown.
+As a result, our first prototype \daf{} collected system-level information about
+running processes using established methods (e.g., the Netlink Socket Diagnostics
+subsystems). The actual packet interception, analysis, and optional alteration
+were performed using \texttt{Netfilter Queue}. This system is part of the larger
+Netfilter framework and acts as the backend of the data acquisition library
+(i.e., \texttt{libDAQ}) for \texttt{snort3} when operating in Intrusion Prevention
+Mode. After significant efforts towards optimizing \daf{} we obtained near linerate
+throughputs on a 10Gbps NIC. In order to offer a performant solution without
+further compromising security guarantees, we decided to relax our initial
+assumptions and decided to allow using Linux Kernel Modules. Thus we reimplemented
+the most critical features in \daf{} in a new version that we called \scout{}.
+This new iteration starts recording information about memory mapped executable
+sections as soon as it is inserted. This data is acquired by intercepting
+the \texttt{mmap()} and related system calls by means of dynamic instrumentation
+of their common sub-routines. Due to its intrinsic parallelization and lack
+of context switches for verdict communications, \scout{} effortlessly obtained
+linerate throughput on the same 10Gbps system and with no noticeable overhead
+during the process launch phase.
+
+In Chapter \ref{sign:chapter} we describe the distributed aspect of our firewall.
+Specifically, we present the structure of our SHA256-HMAC based tag that we
+attach to each packet, differentiate between IP, TCP and UDP options and
+introduce two implementations. One of them is a component of \daf{}, is specific
+to Linux and utilizes IP options as a conduit. The other is a standalone Windows
+driver that integrates with the Windows Filter Engine and uses TCP options as
+a conduit. The difference in protocol choice is meant to demonstrate that
+although we choose IP options due to them seamlessly covering all Layer 4
+protocols, switching to TCP options can be viable if the network conditions are
+adverse to our prefered conduit. In this chapter we also present our
+\texttt{iptables} and \texttt{snort3} plugins that can be used for tag
+verification purposes. These plugins permit our firewall to be executed on a
+subset of hosts where most of the traffic originates. The tag verification can
+be performed on the path by middleboxes, without requiring the installation of
+additional dependencies in order to run our firewall. Finally, we discuss the
+challenges we faced when trying to integrate GPGME in \daf{} and present a bug
+we discovered inside the Netfilter Queue kernel module. We have confirmed that
+under certain conditions, this bug may allow modified packets to present
+malformed Layer 4 headers to \texttt{iptables} match functions on the
+\texttt{POSTROUTING} chain. This aspect is not central to this thesis and is
+discussed further in Section \ref{conclusion:future}.
