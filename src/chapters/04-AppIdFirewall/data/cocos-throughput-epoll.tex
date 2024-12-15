@@ -16,8 +16,13 @@
             xlabel            = {MTU [bytes]},
             ylabel            = {Throughput [Gbps]},
             legend columns    = 7,
-            legend style      = {at={(0.15,1.05)}, anchor=south west}
+            legend style      = {at={(0.05,1.05)}, anchor=south west}
         ]
+            \addplot[color=Goldenrod, very thick]
+                table[x=mtu, y=baseline, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput.csv};
+            \addlegendentry{baseline}
+
             \addplot[color=Rhodamine, very thick]
                 table[x=mtu, y=vanilla, col sep=comma]
                 {src/chapters/04-AppIdFirewall/data/cocos-throughput-epoll.csv};
