@@ -5,16 +5,17 @@ At the time of writing, we are pursuing two additional goals that are related
 to this thesis:
 
 \begin{enumerate}
-    \item \textbf{Netfilter Queue bug:} When developing the \texttt{iptables}
-    plugin for verifying the SHA256-HMAC calculated over the Layer 4 payload
-    and stored as an experimental IP options, we noticed that the \texttt{tcp_hdr()}
-    macro returned an incorrect pointer. Not accounting for the newly added 36
-    byte IP options section, it instead returned a pointer memoized before
-    reaching the \texttt{OUTPUT} chain. At the moment, we are investigating
-    uses of macros or inline functions that act as wrappers over
-    \texttt{skb_transport_header()} (similar to \texttt{tcp_hdr()}) that are
-    used /textit{after} the \texttt{OUTPUT} chain verdict is established. Our
-    aim is to determine the level of criticality of this bug, and then patch it.
+    \item \textbf{Investigation of Netfilter Queue bug:} When developing the
+    \texttt{iptables} plugin for verifying the SHA256-HMAC calculated over
+    the Layer 4 payload and stored as an experimental IP options, we noticed
+    that the \texttt{tcp\_hdr()} macro returned an incorrect pointer. Not
+    accounting for the newly added 36 byte IP options section, it instead
+    returned a pointer memoized before reaching the \texttt{OUTPUT} chain. At
+    the moment, we are investigating uses of macros or inline functions that
+    act as wrappers over \texttt{skb\_transport\_header()} (similar to
+    \texttt{tcp\_hdr()}) that are used /textit{after} the \texttt{OUTPUT} chain
+    verdict is established. Our aim is to determine the level of criticality of
+    this bug, and then patch it.
 
     \item \textbf{Runtime verification of JIT-ed code:} The most consistent
     criticism we have faced so far relates to our decision to not include
