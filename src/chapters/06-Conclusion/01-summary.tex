@@ -1,7 +1,17 @@
 \section{Thesis Summary}
 \label{conclusion:summary}
 
-In Chapter \ref{background:chapter} we \radu{TODO}.
+In Chapter \ref{background:chapter} we presented a state of the art overview of
+industrial firealling technologies that perform application identification.
+Because their implementation is proprietary and closed source, we baseed our
+assessment on technical briefs and the official documentation. This overview was
+meant to present the overall capabilities of existing technology with the
+purpose of better distinguishing our proposed solution. Additionally, we
+briefly describe the Netfilter system, how firewalling is implemented on Linux
+and how \texttt{Netfilter Queue} integrates in this framework. In the second
+part of this chapter we described the mechanisms designed for extending the IP,
+TCP and UDP protocols. This subsection was intended as a primer, so it only
+covers the basic mechanisms involved.
 
 In Chapter \ref{extend:chapter} we explored the viability of using protocol
 options as a conduit for attributing originating process identity information
@@ -42,24 +52,24 @@ of context switches for verdict communications, \scout{} effortlessly obtained
 linerate throughput on the same 10Gbps system and with no noticeable overhead
 during the process launch phase.
 
-In Chapter \ref{sign:chapter} we describe the distributed aspect of our firewall.
-Specifically, we present the structure of our SHA256-HMAC based tag that we
-attach to each packet, differentiate between IP, TCP and UDP options and
-introduce two implementations. One of them is a component of \daf{}, is specific
-to Linux and utilizes IP options as a conduit. The other is a standalone Windows
-driver that integrates with the Windows Filter Engine and uses TCP options as
-a conduit. The difference in protocol choice is meant to demonstrate that
-although we choose IP options due to them seamlessly covering all Layer 4
+In Chapter \ref{sign:chapter} we described the distributed aspect of our firewall.
+Specifically, we presented the structure of our SHA256-HMAC based tag that we
+attached to each packet, differentiated between IP, TCP and UDP options and
+introduced two implementations. One of them was a component of \daf{}, was specific
+to Linux and utilized IP options as a conduit. The other was a standalone Windows
+driver that integrated with the Windows Filter Engine and used TCP options as
+a conduit. The difference in protocol choice was meant to demonstrate that
+although we chose IP options due to them seamlessly covering all Layer 4
 protocols, switching to TCP options can be viable if the network conditions are
-adverse to our preferred conduit. In this chapter we also present our
+adverse to our preferred conduit. In this chapter we also presented our
 \texttt{iptables} and \texttt{snort3} plugins that can be used for tag
 verification purposes. These plugins permit our firewall to be executed on a
 subset of hosts where most of the traffic originates. The tag verification can
 be performed on the path by middleboxes, without requiring the installation of
-additional dependencies in order to run our firewall. Finally, we discuss the
-challenges we faced when trying to integrate GPGME in \daf{} and present a bug
-we discovered inside the Netfilter Queue kernel module. We have confirmed that
-under certain conditions, this bug may allow modified packets to present
-malformed Layer 4 headers to \texttt{iptables} match functions on the
+additional dependencies in order to run our firewall. Finally, we discussed the
+challenges we faced when trying to integrate GPGME in \daf{} and presented a bug
+we discovered inside the \texttt{Netfilter Queue} kernel module. We have
+confirmed that under certain conditions, this bug may allow modified packets to
+present malformed Layer 4 headers to \texttt{iptables} match functions on the
 \texttt{POSTROUTING} chain. This aspect is not central to this thesis and is
 discussed further in Section \ref{conclusion:future}.
