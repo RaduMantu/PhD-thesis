@@ -1,0 +1,23 @@
+During the past twenty odd years, each industrial firewall manufacturor
+implemented certain features derived from the Next Generation Firewall paradigm.
+Some problems such as traffic decryption are considered to be solved and all
+solutions are similar in how they handle it. Others are of more immediate interest
+and the answer is not necessarily obvious. In this chapter we focus on
+understanding how the current application identification features of modern
+firewalls function. In what ways are they similar, and how do they distinguish
+themselves from one another. In most cases, the mechanisms in play are the
+intellectual propriety of the OEMs and the software is closed source. Thus, much
+of the information is derived from technical reports and product briefs.
+
+Another concept that is fundamental to this thesis are network protocol options.
+In our work, we have developed a traffic annotation scheme that allows us to
+tag packets that comply with the firewall policy of the originating host. We
+consider it paramount that our annotation scheme does not break communication
+with systems that are unaware of it. As such, we decided to use the protocol
+extension mechanisms that have (in most cases) been in place since the creation
+of the protocol itself. In this chapter we explain how IP, TCP and UDP options
+work. However, we do not discuss their level of adoption in the wider Internet
+or their status within their respective IETF working groups. This chapter is
+intended to provide a basic understanding of how these mechanisms function.
+Other aspects are discussed at length in the following chapters.
+
