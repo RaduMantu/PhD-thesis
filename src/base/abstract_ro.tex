@@ -1,1 +1,30 @@
-Rezumat (abstract) teză
+În această teză contestăm consensul actual privind modul în care se realizează
+vizibilitatea aplicațiilor pe firewall-urile de nouă generație. Pentru cea mai
+mare parte a ultimelor două decenii, firewall-urile au s-au bazat pe Deep Packet
+Inspection (DPI) pentru a obține acest rezultat. Cu toate acestea, această abordare
+are o serie de dezavantaje semnificative. În primul rând, confidențialitatea
+utilizatorului este compromisă, deoarece DPI poate fi aplicată doar traficului
+necriptat. În al doilea rând, traficul generat de o aplicație nu indică neapărat
+versiunea acesteia și nici nu are capacitatea de a dezvălui ce biblioteci sunt
+utilizate de respectiva aplicație. Astfel, vizibilitatea aplicației poate
+fi utilizată doar pentru a restricționa utilizarea anumitor funcții implementate
+aceasta (e.g., transferul de fișiere), dar nu garantează că un proces vulnerabil
+sau potențial compromis nu poate accesa rețeaua.
+
+Soluția noastră la această problemă constă într-un firewall distribuit. Prin
+valorificarea cunoștințelor Sistemului de Operare la nivelul fiecărei gazde,
+putem împiedica procesele care au binare vulnerabile cunoscute mapate în spațiul
+lor de adresă virtuala să emită sau să primească trafic de pe rețea. În plus,
+putem adnota pachetele care respectă politica firewall-ului local pentru validarea
+lor pe middlebox-uri. Pentru a dezvolta această schemă de adnotare, am efectuat
+o serie de experimente în rețele publice care ne-au permis să stabilim care
+mecanismu de extindere a protocalelor de rețea este cel mai potrivit pentru
+această sarcină. Pentru a demonstra portabilitatea soluției noastre, am
+implementat mai multe prototipuri. \daf{} este varianta ce rulează strict în
+user space și are cea mai completă funcționalitate. \scout{} este o alternativă
+care este implementată ca un modul de kernel și demonstrează performanță mult
+îmbunătățită. În plus, propunem un sistem de adnotare Proof of Concept bazat pe
+Windows Filter Engine. În cele din urmă, oferim plugin-uri pentru \texttt{iptables}
+și \texttt{snort3} care demonstrează cum sistemul nostru de annotare se poate
+integra fără dificultate în stivele software existente.
+
