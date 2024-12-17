@@ -95,12 +95,8 @@ By using \texttt{Netfilter Queue}, the network traffic passes through two filter
 
 The method we use the identity of a process to filter packets utilizes the objects mapped in its address space. The user can generate a rule requiring that a specific object (represented by its SHA256 digest) be either present or absent from all processes that are capable of generating or receiving the packets. Alternatively, the user can employ an aggregate hash of all file-backed objects with an executable section (sorted in alphabetical order on computation) to represent a specific version of a specific program, in a single rule. If the user wishes to issue a whitelist, then all processes must comply to this rule. Otherwise, if the user desires to enforce a blacklist, then a single process is sufficient to contravene the match criteria in order for the packet to be dropped.
 
-The SHA256 digest itself is calculated based on the backing file of a memory mapped object, not on the in-process memory itself. The reason is twofold: monitoring memory access for every process without using static instrumentation is extremely costly, and excluding the writable sections to maintain the consistency of the digest gives leeway to an attacker. Although we assume that file permissions and ACLs are sufficient to protect the stored object files from tampering, one could extend \daf{} to monitor changes to hashed files via the inotify system.
-
-Alongside the process identity matching mechanism, \daf{} also implements filtering based on IPs in CIDR notation, ports and Layer 4 protocol. These can all be configured by the \daf{} companion app, analogous to \texttt{iptables} itself. In addition to listing and managing rules, \daf{} is also capable of computing hashes and aggregate hashes for binaries and shared objects. This functionality was added to simplify the rule construction procedure.
-
 \begin{lstlisting}[
-    % style=bashstyle,
+    stringstyle=\color{black},
     caption={\daf{} rule configuration with companion app},
     label={appfw:daf:lst:rule}]
 $ ctl-fw                                           \
@@ -115,10 +111,14 @@ $ ctl-fw                                           \
                | awk '{print $1}')
 \end{lstlisting}
 
+The SHA256 digest itself is calculated based on the backing file of a memory mapped object, not on the in-process memory itself. The reason is twofold: monitoring memory access for every process without using static instrumentation is extremely costly, and excluding the writable sections to maintain the consistency of the digest gives leeway to an attacker. Although we assume that file permissions and ACLs are sufficient to protect the stored object files from tampering, one could extend \daf{} to monitor changes to hashed files via the inotify system.
+
+Alongside the process identity matching mechanism, \daf{} also implements filtering based on IPs in CIDR notation, ports and Layer 4 protocol. These can all be configured by the \daf{} companion app, analogous to \texttt{iptables} itself. In addition to listing and managing rules, \daf{} is also capable of computing hashes and aggregate hashes for binaries and shared objects. This functionality was added to simplify the rule construction procedure.
+
 Listing \ref{appfw:daf:lst:rule} is an example of \daf{} rule that targets all local processes that run in the current network namespace and make use of the \texttt{curl} base binary. The rule prevents these processes from generating TCP traffic to ports other than 80 in a given subnet. For performing an exact match on \texttt{curl} in such way as to include its shared objects dependencies, the \texttt{-{}-agg-hash} flag can be used instead of \texttt{-{}-sng-hash}. Here, the companion app can be used to calculate the aggregate hash that should be passed as a parameter (see Listing \ref{appfw:daf:lst:hash}).
 
 \begin{lstlisting}[
-    % style=bashstyle,
+    stringstyle=\color{black},
     caption={Aggregate hash calculation},
     label={appfw:daf:lst:hash}]
 $ ctl-fw $(ldd /usr/bin/curl \
