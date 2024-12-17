@@ -1,3 +1,86 @@
 \section{Protocol extension mechanisms}
 \label{background:protocols}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{IP options}
+
+In RFC 791 \cite{RFC0791}, the authors added an \textit{optional} variable-length
+section to the IPv4 specification. This section would normally be unnecessary but
+could provide useful control functions in certain situations. Its presence would
+be detected via an Internet Header Length (IHL) field value greater than 5. The
+IHL field represents the number of double-words (i.e., 32-bit structures) that
+comprise the IP header and is defined as a 4-bit bit field. As a result, its
+maximum value is 15, meaning that the options section could at most measure 40
+bytes in size.
+
+This variable-sized addition to the IP header represents a buffer where a list
+of Type-Length-Value (TLV) tuples is stored. Each unique option is assigned a
+1-byte codepoint for identification purposes; that is the Type. The Length is
+another 1-byte field that specifies the length of that option, including these
+first two fields. Finally, the Value is a buffer that is used arbitrarily by
+the TCP/IP stack that imeplements the option. There are some exceptions to this
+rule. Some options do not have a Value field, or even a Length field if that
+length is constant and standardized. For example, the End of Options List (EOL)
+option that indicates the end of the section, or the No Operation (NOP) option
+used strictly as padding for alignment purposes.
+
+Although the original IPv4 RFC states that \textit{"They must be implemented by
+all IP modules (host and gateways)"} and \textit{"What is optional is their
+transmission in any particular datagram, not their implementation"}, their
+unequivocal acceptance could pose security threats. For example, the inclusion
+of the Strict Source and Record Route (SSRR) option could be used for probing
+the topology of the target network. Similarly, a large number of NOPs could be
+used as a denial of service attack in that they exhaust the CPU resources of the
+router by forcing it to parse up to 40 inconsequential options per packet. For
+this reason, any sequence of 4 or more consecutive NOPs is usually clssified as
+malicious.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{TCP options}
+
+TCP options are similar to their Layer 3 counterpart in that they had also been
+standardized in their intial RFC release \cite{rfc793}. In contrast to IP options
+however, these have since known wider adoption and community interest. While IP
+options have been relegated to infrastructure debugging purposes with occasional
+attempts of extending their usefulness in the security domain (e.g., the
+Commercial IP Security Option for packet labeling), TCP options became
+indispensable for achieving acceptable performances in WANs.
+
+Structurally, TCP options function the same as IP options. Instead of the IHL
+field, the size of the TCP header is determined by the Data Offset field (also
+4-but wide). The contents of the variable-length TCP options section is also a
+list of TLV tuples. One distinction however, is in the methodology of
+prototyping new options in the Internet. The Internet Assigned Numbers Authority
+(IANA) assigned a special codepoint for both Experiemntal IP (30) and TCP (253,
+254) options. However, the disproportionate interest in the development of new
+TCP options lead to potential collisions in public networks. As a result, the
+specification was updated in RFC 6994 with the introduction of the Shared Use of
+Experimental TCP Options. Now, experimental options must contain a 16-bit or
+32-bit Experiment ID (ExID) field that is registered with IANA.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{UDP options}
+
+UDP options are an oddity in that they were not part of the initial design
+\cite{postel1980rfc0768}. In fact, UDP options are not even standardized at the
+time of writing and are still an active IETF draft almost a decade after being
+first proposed in July 2015.
+
+Although there is no equivalent to the IHL or Data Offset fields, UDP options
+can still exist due to a redundancy between the IP Total Length and UDP Length
+fields. By increasing the former while leaving the latter unmodified, one can
+create a trailer section after the UDP payload. One benefit of this approach is
+that the UDP section length is limited only by the maximum IP packet size. This
+difference may seem insignificant but the 40-byte size limit in TCP options is
+the sole reason why no new options can be developed today; most of the options
+section space has been exhausted by other, more critical options. Considering
+the push towards QUIC \cite{langley2017quic} and away from TCP/TLS, this can
+lead to renewed interest in the development of new experimental Transport Layer
+options.
+
+Nonetheless, UDP options are still insufficiently tested in the wider Internet.
+Moreover, different implementations of the UDP protocol may erroneously ignore
+the UDP Length field and calculate the payload size strinctly based on the
+IP Total Length, leading to a breakdown in communication at the Application
+Layer.
+

@@ -212,13 +212,6 @@ in the linked list that represents them in kernel memory. See Figure
 \ref{background:firewall:fig:netfilter} for an overview of the evaluation order
 and relative table priorities.
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth,keepaspectratio]{figures/netfilter_struct.pdf}
-    \caption{Netfilter framework chains and table priority.}
-    \label{background:firewall:fig:netfilter}
-\end{figure}
-
 The five table types that can be encountered in the Netfilter framework are as follows:
 
 \begin{itemize}
@@ -236,6 +229,13 @@ The five table types that can be encountered in the Netfilter framework are as f
     \item \texttt{security:} Used by LSMs for specifying Mandatory Access Control
           (MAC) policies that apply to network traffic.
 \end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio]{figures/netfilter_struct.pdf}
+    \caption{Netfilter framework chains and table priority.}
+    \label{background:firewall:fig:netfilter}
+\end{figure}
 
 Out of the five tables above, only \texttt{filter} and \texttt{security} can
 contain rules that are capable of blocking network traffic. Although the use of
