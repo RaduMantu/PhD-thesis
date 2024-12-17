@@ -328,10 +328,9 @@ Our throughput evaluation of \scout{} consists of \texttt{iperf3} tests performe
 
 Figure \ref{apffw:appscout:fig:cocos-throughput} consists of three campaigns of tests, illustrating the impact of adding one \texttt{iptables} rule consisting of strictly one \texttt{xt\_scout} match function invocation. The match argument was selected so that each query to \texttt{app-scout} would parse the executable sections record in its entirety, thus simulating a worse case scenario. For \texttt{iperf3}, this record consists of 13 entries. Because the average throughput difference between the baseline and the filtered case is exceedingly low (0.15 Mbps) within the MTU range 1500-9710, we performed a moving average with a window of 30 samples, equating to 300 bytes. This was necessary in order to demonstrate that the low overhead was not coincidental. Moreover, we observe a tendency of the \scout{} throughput to grow and converge towards the baseline for increasingly higher MTU values (see the linear regression of the raw data in the 1500-9710 MTU range). This phenomenon can be motivated by a decrease in the number of Packets Per Second (PPS). For example, a six-fold increase over the default MTU size of 1500 translates results in a similar decrease in the number of packets necessary to saturate the network controller. Because the process identity inference cost does not depend on the packet size, it stands to reason that the \scout{} overhead should also decrease sixfold.
 
-\input{data/nuc-throughput-ma30}
-
 Similarly, Figure \ref{apffw:appscout:fig:nuc-throughput} illustrates the same experiment performed on the Intel NUC system, with a 1Gbps NIC. Although less noisy due to the lower throughput, the same moving average window was used for consistency. Despite a number of anomalies that can for the most part be attributed to the \texttt{e1000e} driver, we notice that the reduced number of Packets Per Second (PPS) in relation to the core count as well as the increase base CPU frequency contribute to further reduce the overhead of \texttt{xt\_scout}.
 
+\input{data/nuc-throughput-ma30}
 
 \subsubsection{System tuning based on processor resources}
 \label{subsec:tuning}

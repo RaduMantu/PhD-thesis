@@ -1,11 +1,11 @@
-\begin{figure*}
+\begin{figure*}[h]
     \centering
 
     \begin{tikzpicture}
         \begin{axis}[
             restrict y to domain = 9420:9440,
             width                = \textwidth,
-            height               = 5cm,
+            height               = 6cm,
             at                   = {(0,0)},
             xmin                 = 1000,
             xmax                 = 9400,
@@ -29,10 +29,9 @@
                 {src/chapters/04-AppIdFirewall/data/cocos-throughput-ma30.csv};
             \addlegendentry{AppScout}
 
-            % function derived based on scipy.stats.linregress
-            \draw[Green, dashed, line width=1.5pt] plot[samples=2, domain=1000:9420]
-                function {0.000102 * x + 9432.945001};
-            \addlegendimage{Green, dashed, line width=1.5}
+            \addplot[color=Green, dashed, line width=1.5pt]
+                table[x=mtu, y=trend, col sep=comma]
+                {src/chapters/04-AppIdFirewall/data/cocos-throughput-ma30.csv};
             \addlegendentry{lin. regression}
         \end{axis}
     \end{tikzpicture}
@@ -41,4 +40,3 @@
     \label{apffw:appscout:fig:cocos-throughput}
 \end{figure*}
 
-\radu{TODO: check why the draw command does not work here}
