@@ -1,6 +1,8 @@
+\newcommand{\rx}{{\textcolor{red}{x}}}
+
 \begin{table*}[t]
     \centering
-    \caption{Average number of attempted IP timestamp additions along the route between any two cloud instances or our personal (p) server. Highlighted values indicate option acceptance across all experiments. Missing values signify that no annotated packet was able to traverse the network.}
+    \caption{Average number of attempted IP timestamp additions along the route between any two cloud instances or our personal (p) server. Highlighted values indicate option acceptance across all experiments. Cross symbols signify that no annotated packet was able to traverse the network.}
     \label{extend:ops:table:ip-ts-icmp}
     \hbox{ 
     \begin{adjustbox}{max width=\textwidth}
@@ -52,63 +54,63 @@
         %%% gcloud rows
         & \multirow{5}{*}{\rotatebox[origin=c]{90}{gcloud}}
           & us-east1
-            & - & & & & & & & 9 & 7 & & & & & & & 4 & 4 & 4 & & & \\
+            & - &\rx &\rx &\rx &\rx &\rx &\rx & 9 & 7 &\rx &\rx &\rx &\rx &\rx &\rx & 4 & 4 & 4 &\rx &\rx &\rx \\
         & & europe-west2
-            & & - & & & & & & \cellcolor{gray!20} 9 & 7 & & & & & & & 4 & \cellcolor{gray!20} 4 & 4 & & & \\
+            &\rx & - &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 9 & 7 &\rx &\rx &\rx &\rx &\rx &\rx & 4 & \cellcolor{gray!20} 4 & 4 &\rx &\rx &\rx \\
         & & asia-southeast1
-            & & & - & & & & & \cellcolor{gray!20} 9 & \cellcolor{gray!20} 7 & & & & & & & 4 & 4 & 4 & & & \\
+            &\rx &\rx & - &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 9 & \cellcolor{gray!20} 7 &\rx &\rx &\rx &\rx &\rx &\rx & 4 & 4 & 4 &\rx &\rx &\rx \\
         & & asia-northeast1
-            & & & & - & & & & \cellcolor{gray!20} 9 & \cellcolor{gray!20} 7 & & & & & & & 4 & 4 & 4 & & & \\
+            &\rx &\rx &\rx & - &\rx &\rx &\rx & \cellcolor{gray!20} 9 & \cellcolor{gray!20} 7 &\rx &\rx &\rx &\rx &\rx &\rx & 4 & 4 & 4 &\rx &\rx &\rx \\
         & & australia-southeast1
-            & & & & & - & & & \cellcolor{gray!20} 9 & \cellcolor{gray!20} 7 & & & & & & & 4 & 4 & \cellcolor{gray!20} 4 & & & \\
+            &\rx &\rx &\rx &\rx & - &\rx &\rx & \cellcolor{gray!20} 9 & \cellcolor{gray!20} 7 &\rx &\rx &\rx &\rx &\rx &\rx & 4 & 4 & \cellcolor{gray!20} 4 &\rx &\rx &\rx \\
         \hhline{~*{23}{-}}
         %%% aws rows
         & \multirow{5}{*}{\rotatebox[origin=c]{90}{aws}}
           & us-east-1
-            & & & & & & - & & & & & & & & & & & & & & & \\
+            &\rx &\rx &\rx &\rx &\rx & - &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx \\
         & & eu-central-1
-            & & & & & & & - & & & & & & & & & & & & & & \\
+            &\rx &\rx &\rx &\rx &\rx &\rx & - &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx \\
         & & ap-south-1
-           & & & & & & & & - & \cellcolor{gray!20} 13 & & & & & & & \cellcolor{gray!20} 16 & \cellcolor{gray!20
+           &\rx &\rx &\rx &\rx &\rx &\rx &\rx & - & \cellcolor{gray!20} 13 &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 16 & \cellcolor{gray!20
 } 15 & \cellcolor{gray!20} 12 & \cellcolor{gray!20} 14 & \cellcolor{gray!20} 12 & \cellcolor
 {gray!20} 12 \\
         & & me-south-1
-            & & & & & & & & \cellcolor{gray!20} 13 & - & & & & & & & \cellcolor{gray!20} 13 & \cellcolor{gray!20
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 13 & - &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 13 & \cellcolor{gray!20
 } 10 & \cellcolor{gray!20} 15 & \cellcolor{gray!20} 13 & \cellcolor{gray!20} 11 & \cellcolor
 {gray!20} 11 \\
         & & sa-east-1
-            & & & & & & & & & & - & & & & & & & & & & & \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx & - &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx \\
         \hhline{~*{23}{-}}
         %%% azure rows
         & \multirow{5}{*}{\rotatebox[origin=c]{90}{azure}}
           & canadacentral
-            & & & & & & & & 16 & 13 & & - & & & & & 9 & 10 & 10 & 8 & 11 & 10 \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx & 16 & 13 &\rx & - &\rx &\rx &\rx &\rx & 9 & 10 & 10 & 8 & 11 & 10 \\
         & & centralus
-            & & & & & & & & & & & & - & & & & & & & & & \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx & - &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx \\
         & & koreacentral
-            & & & & & & & & 15 & 13 & & & & - & & & 9 & 9 & 10 & 8 & 10 & 10 \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx & 15 & 13 &\rx &\rx &\rx & - &\rx &\rx & 9 & 9 & 10 & 8 & 10 & 10 \\
         & & francecentral
-            & & & & & & & & & & & & & & - & & & & & & & \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx & - &\rx &\rx &\rx &\rx &\rx &\rx &\rx \\
         & & australiacentral
-            & & & & & & & & & & & & & & & - & & & & & & \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx &\rx & - &\rx &\rx &\rx &\rx &\rx &\rx \\
         \hhline{~*{23}{-}}
         %%% docean rows
         & \multirow{5}{*}{\rotatebox[origin=c]{90}{docean}}
           & nyc1
-            & & & & & & & & \cellcolor{gray!20} 17 & \cellcolor{gray!20} 15 & & & & & & & - & \cellcolor{gray!20} 6 & \cellcolor{gray!20} 6 & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 10 \\
-        & & fra1 & & & & & & & & \cellcolor{gray!20} 14 & \cellcolor{gray!20} 13 & & & & & & & \cellcolor{gray!20} 6 & - & \cellcolor{gray!20} 6 & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 10 & \cellcolor{gray!20} 9 \\
-        & & sgp1 & & & & & & & & \cellcolor{gray!20} 13 & \cellcolor{gray!20} 14 & & & & & & & \cellcolor{gray!20} 6 & \cellcolor{gray!20} 6 & - & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 13 \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 17 & \cellcolor{gray!20} 15 &\rx &\rx &\rx &\rx &\rx &\rx & - & \cellcolor{gray!20} 6 & \cellcolor{gray!20} 6 & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 10 \\
+        & & fra1 &\rx &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 14 & \cellcolor{gray!20} 13 &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 6 & - & \cellcolor{gray!20} 6 & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 10 & \cellcolor{gray!20} 9 \\
+        & & sgp1 &\rx &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 13 & \cellcolor{gray!20} 14 &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 6 & \cellcolor{gray!20} 6 & - & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 13 \\
         & & tor1
-            & & & & & & & & \cellcolor{gray!20} 14 & \cellcolor{gray!20} 13 & & & & & & & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 5 & - & \cellcolor{gray!20} 9 & \cellcolor{gray!20} 11 \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 14 & \cellcolor{gray!20} 13 &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 5 & \cellcolor{gray!20} 5 & - & \cellcolor{gray!20} 9 & \cellcolor{gray!20} 11 \\
 
         & & blr1
-            & & & & & & & & \cellcolor{gray!20} 14 & \cellcolor{gray!20} 12 & & & & & & & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 10 & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 9 & - & \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 14 & \cellcolor{gray!20} 12 &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 10 & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 9 & - &\rx \\
         \hhline{~*{23}{-}}
         %%% personal rows
         & \multirow{1}{*}{\rotatebox[origin=c]{90}{p}}
           & Bucharest
             %%% actual data HERE
-            & & & & & & & & \cellcolor{gray!20} 16 & \cellcolor{gray!20} 13 & & & & & & & \cellcolor{gray!20} 10 & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 14 & \cellcolor{gray!20} 10 & \cellcolor{gray!20} 13 & - \\
+            &\rx &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 16 & \cellcolor{gray!20} 13 &\rx &\rx &\rx &\rx &\rx &\rx & \cellcolor{gray!20} 10 & \cellcolor{gray!20} 11 & \cellcolor{gray!20} 14 & \cellcolor{gray!20} 10 & \cellcolor{gray!20} 13 & - \\
         \hline
     \end{tabular}
     \end{adjustbox}
