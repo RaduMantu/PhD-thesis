@@ -21,7 +21,7 @@ We claim the following contributions:
 \begin{itemize}
     \item We offer a tool\footnote{Code available at \url{https://github.com/RaduMantu/ops-inject}} capable of intercepting specific packets and annotating them with user specified, per-protocol option types. The options are generated in their entirety by a decoder that allows for easy integration of new option types, as well as protocols.
     \item We propose a framework for assessing an annotation system's compliance with firewall policies and provide configuration scripts and templates for cloud experimentation under the primary available providers (i.e.: Google Cloud, AWS, Microsoft Azure, Digital Ocean).
-    \item We evaluate current layer 3 and layer 4 protocol extension mechanisms and deliberate their suitability as a basis for developing new extensions.
+    \item We evaluate current Layer 3 and Layer 4 protocol extension mechanisms and deliberate their suitability as a basis for developing new extensions.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,21 +40,62 @@ We claim the following contributions:
     \label{extend:ops:fig:nfq}
 \end{figure}
 
-Specifically, once a packet reaches a Netfilter hook that corresponds to one of the main five chains (i.e., PREROUTING, INPUT, etc.) and satisfies the match criteria of a specific \texttt{iptables} rule, the packet is enqueued, pending further analysis. After a userspace process subscribes to the very same queue, the packet is copied to its virtual address space, starting with its layer 3 header, via a Unix Domain Socket. The process is allowed to inspect the packet, and even to further buffer it while requesting subsequent matches for out-of-order processing. Eventually, a verdict must be reached and communicated to the kernel as one of the standard terminal targets in \texttt{iptables} (e.g., ACCEPT, DROP, etc.)
+Specifically, once a packet reaches a Netfilter hook that corresponds to one of the main five chains (i.e., PREROUTING, INPUT, etc.) and satisfies the match criteria of a specific \texttt{iptables} rule, the packet is enqueued, pending further analysis. After a userspace process subscribes to the very same queue, the packet is copied to its virtual address space, starting with its Layer 3 header, via a Unix Domain Socket. The process is allowed to inspect the packet, and even to further buffer it while requesting subsequent matches for out-of-order processing. Eventually, a verdict must be reached and communicated to the kernel as one of the standard terminal targets in \texttt{iptables} (e.g., ACCEPT, DROP, etc.)
 
 The reason this extension is useful to us is not necessarily the filtration aspect, but the fact that once the verdict has been established, the process can supply a modified version of the packet. This new packet will overwrite the one initially captured by the Netfilter hook. Given a positive verdict, the modified packet will be reinserted into the network stack, following the intended data path and reaching its endpoint. Note, however, that the userspace process can additionally specify another queue to be used for reinsertion. If this is indeed the case, the potentially modified packet will be stalled once again for analysis. The process performing the second inspection (i.e., the process subscribed to the second queue) does not necessarily need to be the same process as before.
 
 \subsubsection{Annotation tool}
 \label{extend:ops:architecture:annotation}
 
-In testing different features of layer 3 and layer 4 protocols, a usual approach consists of generating synthetic traffic and bypassing the network stack of the originating host. We decided to forgo this method in favor of a more practical alternative: modifying real traffic. The primary advantage of the latter scheme over the former is the ability to verify not only that the annotated packets can be successfully transmitted over the network, but also that their alteration does not impact higher level protocols in the OSI stack. Additionally, the flexibility in assessing compliance with stateful firewalls alleviates the effort that would have otherwise been required to simulate sufficiently credible sessions.
+In testing different features of Layer 3 and Layer 4 protocols, a usual approach consists of generating synthetic traffic and bypassing the network stack of the originating host. We decided to forgo this method in favor of a more practical alternative: modifying real traffic. The primary advantage of the latter scheme over the former is the ability to verify not only that the annotated packets can be successfully transmitted over the network, but also that their alteration does not impact higher level protocols in the OSI stack. Additionally, the flexibility in assessing compliance with stateful firewalls alleviates the effort that would have otherwise been required to simulate sufficiently credible sessions.
 
 These aspects gave impetus to the development of a method to insert multiple protocol specific options in outgoing traffic. One of the essential characteristics of the resulting tool is the capacity to easily implement new options for existing protocols or to register new protocols altogether. Limited by the extent of our needs for this experiment, session tracking falls outside its purview. As a result, options such as MultiPath TCP are not available for testing. Instead, all options should either be static in nature (e.g., NOP) or depend entirely on the information available in a single packet's header and payload (e.g., alternative checksums). Otherwise, its use may be limited to determining only whether the initial packet was able to traverse the network (e.g., TCP timestamps).
 
-Next, we present a summary overview of the tool's operation. Initially, the user adds one or more \texttt{iptables} rules with an \texttt{NFQUEUE} target. All packets that match one of these rules are redirected into userspace for our tool to evaluate and modify as it sees fit. During the initial invocation of the tool, the user may specify a sequence of bytes that represent option codepoints. For each packet, the codepoints will be expanded to actual TLV entries and inserted into a (potentially new) options section. The NetfilterQueue callback that fulfils this purpose takes three steps towards successful annotation:
-\\ \textbf{Options Decoding:} having access to the packet, as provided by the Netfilter kernel hook, the first step is generating the contents of the options section for a pre-established protocol (i.e., IP, TCP, UDP). Using the user-specified sequence of \texttt{option-type} octets, specific decoder functions are called upon to expand them, thus populating the options buffer. This expansion phase is by and large an arbitrary process. For example, an IP Timestamp Option (\texttt{0x44}) will be translated to a 12 octet buffer containing a single timestamp associated to the source IP address. The generated flags will denote pre-specified address fields as to discourage addition of new timestamps from compliant middleboxes. This inhibition of user agency is a conscious decision intended to simplify the tool's usage. Nonetheless, the decoder functions can be easily modified on a case-by-case basis to accept more information and conform to finer-grained requirements. Note that the options will appear in the order in which they were initially specified by the user. However, the order in which they are generated may vary. For example, a UDP Options Checksum (\texttt{0x02}) is supposed to be placed as close to the beginning of the section as possible, while at the same time requiring all other options to have already been calculated. Consequently, it's decoding is delayed based on a discretionary option priority assignment.
-\\ \textbf{Packet Reassembly:} This step modifies the initial packet in order to include the newly generated options. Any related fields (e.g., \texttt{IP.total\_length}) with the exception of the checksum are adjusted to account for the payload offset. Based on user preference, existing options can either be completely replaced, or preserved. In our tests, we employed the former approach in order to exert full control over the content of the options section. Alternatively, existing options would take precedence. In turn, this could lead to overflowing user-specified options to be discarded due to space constraints.
-\\ \textbf{Checksum Recalculation:} The reason why this step is separate from the previous is that changes made to a header corresponding to a lower layer can impact the checksum of a higher layer protocol. For example, while IP options are intended to extend only the IP header, the total packet length increases nonetheless. As a result, TCP's or UDP's pseudo-header changes and the layer 4 checksum does so along with it.
+\begin{algorithm}[h]
+    \caption{Packet annotation algorithm}
+    \label{extend:ops:alg:annotator}
+    \begin{algorithmic}[1]
+        \State \textbf{Input:} $user\_codepoints[n]$, $user\_proto$, NFQ packet stream
+        \State \textbf{Output:} modified packets
+        \item[]
+
+        \Function{process\_packet}{$pkt$}
+            \If{$pkt.proto \neq user\_proto$}
+                \State \Return{$pkt$}
+            \EndIf
+            \item[]
+
+            \State \textcolor{gray}{// Step 1: Options decoding}
+            \State $ops\_buff \gets \epsilon$
+            \For{\textbf{each} $codepoint$ \textbf{in} $user\_codepoints$}
+                \State $ops\_buff \gets ops\_buff$ $\cup$ \Call{expand}{codepoint}
+            \EndFor
+            \item[]
+
+            \State \textcolor{gray}{// Step 2: Packet reassembly}
+            \If{should replace options}
+                \State $pkt.ops \gets \epsilon$
+            \EndIf
+            \State $pkt.ops \gets pkt.ops$ $\cup$ $ops\_buff$
+            \State \Call{adjust\_hdr\_lengths}{$pkt$}
+            \item[]
+
+            \State \textcolor{gray}{// Step 3: Checksum recalculation}
+            \State \Call{recalculate\_csums}{$pkt$}
+            \item[]
+
+            \State \Return $pkt$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+Next, we present a summary overview of the tool's operation. Initially, the user adds one or more \texttt{iptables} rules with an \texttt{NFQUEUE} target. All packets that match one of these rules are redirected into userspace for our tool to evaluate and modify as it sees fit. During the initial invocation of the tool, the user may specify a sequence of bytes that represent option codepoints. For each packet, the codepoints will be expanded to actual TLV entries and inserted into a (potentially new) options section. The NetfilterQueue callback that fulfils this purpose takes three steps towards successful annotation. These steps are summarily described in Algorithm \ref{extend:ops:alg:annotator} and further explained below.
+
+\textbf{Options Decoding:} having access to the packet, as provided by the Netfilter kernel hook, the first step is generating the contents of the options section for a pre-established protocol (i.e., IP, TCP, UDP). Using the user-specified sequence of \texttt{option-type} octets, specific decoder functions are called upon to expand them, thus populating the options buffer. This expansion phase is by and large an arbitrary process. For example, an IP Timestamp Option (\texttt{0x44}) will be translated to a 12 octet buffer containing a single timestamp associated to the source IP address. The generated flags will denote pre-specified address fields as to discourage addition of new timestamps from compliant middleboxes. This inhibition of user agency is a conscious decision intended to simplify the tool's usage. Nonetheless, the decoder functions can be easily modified on a case-by-case basis to accept more information and conform to finer-grained requirements. Note that the options will appear in the order in which they were initially specified by the user. However, the order in which they are generated may vary. For example, a UDP Options Checksum (\texttt{0x02}) is supposed to be placed as close to the beginning of the section as possible, while at the same time requiring all other options to have already been calculated. Consequently, it's decoding is delayed based on a discretionary option priority assignment.
+
+\textbf{Packet Reassembly:} This step modifies the initial packet in order to include the newly generated options. Any related fields (e.g., \texttt{IP.total\_length}) with the exception of the checksum are adjusted to account for the payload offset. Based on user preference, existing options can either be completely replaced, or preserved. In our tests, we employed the former approach in order to exert full control over the content of the options section. Alternatively, existing options would take precedence. In turn, this could lead to overflowing user-specified options to be discarded due to space constraints.
+
+\textbf{Checksum Recalculation:} The reason why this step is separate from the previous is that changes made to a header corresponding to a lower layer can impact the checksum of a higher layer protocol. For example, while IP options are intended to extend only the IP header, the total packet length increases nonetheless. As a result, TCP's or UDP's pseudo-header changes and the Layer 4 checksum does so along with it.
 
 An advantage of relying on the Netfilter framework is that it integrates well with \texttt{ip-xfrm} (kernel-side module that implements the IPsec protocol suite). Usually, VPN implementations are split across both userspace and kernelspace. The former carries out the negotiation required as per the IKE protocol, which establishes up to four Security Associations (SA) and creates a Security Policy (SP). The latter utilizes the SAs for packet encapsulation and encryption but more importantly, it uses the SP to determine which packets are to be passed to the IPsec stack. This decision is taken by consulting an SP database after the packet has traversed the \texttt{OUTPUT} and \texttt{POSTROUTING} chains. If appropriate, the packet is modified and reinserted prior to entering the \texttt{OUTPUT} chain. The \texttt{iptables} rule that identifies the packets which require annotations must be well-defined. Otherwise, the user risks modifying a packet that is protected by the ESP protocol. We consider this approach preferable to excluding packets containing ESP headers. Due to the potential usage of NAT-traversal encapsulation, it would be inefficient to identify the presence of the ESP header. Moreover, allowing UDP packets with destination port 4500 to pass may exempt IKE configuration packets from annotation, contrary to the user's intention.
 
