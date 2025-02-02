@@ -9,10 +9,10 @@ Next Generation Firewall, towards the end of the 2000s. Since then, they
 introduced \texttt{App-ID}, their patented traffic clasification system. This
 system can attribute flows to specific applications. Because this technology is
 proprietary, we consulted their 2021 tech brief \cite{paloalto2021appid}. In it,
-the authors admit the limitation of stateful firewalls and state that
-\texttt{App-ID} does not rely on any one such identifying factors such as
-port number of Layer 4 protocol. Instead, they created a multi-stage classification
-pipeline consisting of four methods:
+the authors recognize the inherent limitations of stateful firewalls and state
+that \texttt{App-ID} does not rely on any one such identifying factors such as
+port number of Layer 4 protocol. Instead, they created a multi-stage
+classification pipeline consisting of four distinct methods. These are as follows:
 
 \begin{enumerate}
     \item \textbf{TLS and SSH decryption:} If the payload is determined to have
