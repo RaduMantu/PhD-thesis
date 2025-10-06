@@ -4,9 +4,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Palo Alto App-ID}
 
-Palo Alto was one of the first industrial firewall manufacturors to implement a
+Palo Alto was one of the first industrial firewall manufacturers to implement a
 Next Generation Firewall, towards the end of the 2000s. Since then, they
-introduced \texttt{App-ID}, their patented traffic clasification system. This
+introduced \texttt{App-ID}, their patented traffic classification system. This
 system can attribute flows to specific applications. Because this technology is
 proprietary, we consulted their 2021 tech brief \cite{paloalto2021appid}. In it,
 the authors recognize the inherent limitations of stateful firewalls and state
@@ -21,7 +21,7 @@ classification pipeline consisting of four distinct methods. These are as follow
     ensures that a self-signed certificate is installed on each host within the
     network. When the user attempts to established a secure communication
     channel with an external server, the firewall would intercept the exchange
-    and impersonate said server. It would present its own ceritificate that is
+    and impersonate said server. It would present its own certificate that is
     implicitly trusted and thus have access to the plaintext payload for the
     purpose of deep packet inspection, before forwarding it to the original
     server via a different TLS or SSH session.
@@ -63,7 +63,7 @@ common functionalities that can be identified in multiple applications. For
 example, there is no need to configure a rule blocking file transfers for each
 individual application. Instead, a single rule will apply to all applications
 whose protocol decoders can classify this behaviour. Additionally, future updates
-to the application decoder databse will dynamically update the underlying
+to the application decoder database will dynamically update the underlying
 filtration rules. If this type of match function is too generic, users can create
 arbitrary groups of applications that are relevant to their particular network or
 organization.
@@ -115,7 +115,7 @@ of subsystems. Most notable are:
 \end{enumerate}
 
 All these features benefit from the decryption capabilities of the
-\texttt{SSL Proxy} service. Futhermore, the resulting action that is assigned to
+\texttt{SSL Proxy} service. Furthermore, the resulting action that is assigned to
 each flow is cached in what the authors call the Application System Cache (ASC).
 This verdict caching mechanism is fairly common and implemented in most firewalls,
 hardware or software. On Linux for example, this is the \texttt{contrack} module
@@ -126,7 +126,7 @@ application features that are used for packet matching. It also contains
 malicious traffic signatures, known vulnerabilities for the identified version
 of an application, CVSS scores, etc. In short, this database contains the
 actionable information that is synthesized by the Threat Intelligence department
-at Juniper Networks. Becuase this type of information (i.e., application
+at Juniper Networks. Because this type of information (i.e., application
 vulnerabilities) is short lived, the database needs to be continuously updated
 and access to the latest version is part of a subscription service.
 
@@ -135,7 +135,7 @@ and access to the latest version is part of a subscription service.
 
 AVC is Cisco's alternative to Palo Alto's \texttt{App-ID}. It is based on their
 Network Based Application Recognition (NBAR) system that provides deep packet
-inspection capabilities to their switches and routers. While NBAR is responsible
+inspection capabilities to their switches and routers and is responsible
 for categorizing network flows that use non-standard or dynamic port allocations.
 
 AVC implements mostly the same functionality as Juniper's \texttt{AppID}. The main
@@ -154,7 +154,7 @@ hosts, as long as the impact of the response time does not affect the performanc
 of the overall network.
 
 Another particularity of Cisco's firewalling technology is the concept of Zone-based
-Firewall archtecture. Under this model, policy checks are no longer configured
+Firewall architecture. Under this model, policy checks are no longer configured
 on an interface basis, but instead on what they call a zone. A zone is a logical
 abstraction that clusters multiple interfaces together under a unified label.
 We note that in their documentation, these interfaces are identified by what they

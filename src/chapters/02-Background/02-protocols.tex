@@ -32,7 +32,7 @@ of the Strict Source and Record Route (SSRR) option could be used for probing
 the topology of the target network. Similarly, a large number of NOPs could be
 used as a denial of service attack in that they exhaust the CPU resources of the
 router by forcing it to parse up to 40 inconsequential options per packet. For
-this reason, any sequence of 4 or more consecutive NOPs is usually clssified as
+this reason, any sequence of 4 or more consecutive NOPs is usually classified as
 malicious.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -51,7 +51,7 @@ field, the size of the TCP header is determined by the Data Offset field (also
 4-but wide). The contents of the variable-length TCP options section is also a
 list of TLV tuples. One distinction however, is in the methodology of
 prototyping new options in the Internet. The Internet Assigned Numbers Authority
-(IANA) assigned a special codepoint for both Experiemntal IP (30) and TCP (253,
+(IANA) assigned a special codepoint for both Experimental IP (30) and TCP (253,
 254) options. However, the disproportionate interest in the development of new
 TCP options lead to potential collisions in public networks. As a result, the
 specification was updated in RFC 6994 with the introduction of the Shared Use of
@@ -80,7 +80,7 @@ options.
 
 Nonetheless, UDP options are still insufficiently tested in the wider Internet.
 Moreover, different implementations of the UDP protocol may erroneously ignore
-the UDP Length field and calculate the payload size strinctly based on the
+the UDP Length field and calculate the payload size strictly based on the
 IP Total Length, leading to a breakdown in communication at the Application
 Layer.
 

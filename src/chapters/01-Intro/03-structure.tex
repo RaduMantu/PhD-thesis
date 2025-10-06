@@ -25,12 +25,12 @@ we present our traffic annotator, a user space application capable of intercepti
 packets and annotating them with IP, TCP or UDP options. These options are
 specified by the user as a sequence of codepoints that are expanded in an
 arbitrary manner. In addition to this tool, we offer an analysis of our protocol
-options acceptance excepriments. This analysis includes reachability tests between
+options acceptance experiments. This analysis includes reachability tests between
 multiple cloud hosted instances located at different geographical locations,
 across multiple cloud providers. For the purpose of reproducibility, we include
 our experiment orchestration and analysis tools. Section \ref{extend:netfuzz}
 represents a state of the art overview regarding network fuzzing. Because our
-firewall is reponsible only for enforcing filtration policies based on application
+firewall is responsible only for enforcing filtration policies based on application
 identity, monitoring the internal state of running processes for the purpose of
 anomaly detection falls outside its purview. Consequently, we asses the viability
 of fuzzing network applications as a method of ensuring the soundness of any

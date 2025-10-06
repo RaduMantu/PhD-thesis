@@ -19,7 +19,7 @@ to this thesis:
 
     \item \textbf{Runtime verification of JIT-ed code:} The most consistent
     criticism we have faced so far relates to our decision to not include
-    Just In Time compier output in our process identity measurements. At the time
+    Just In Time compiler output in our process identity measurements. At the time
     we argued that this problem is not trivial and should be studied separately.
     The continuous changes that JIT engines perform on the anonymous executable
     memory ranges that they manage make it impossible to perform accurate
@@ -27,6 +27,6 @@ to this thesis:
     legitimate applications. At this time, we are exploring the possibility of
     implementing a Linux Security Module that may block \texttt{mmap()} and
     \texttt{mprotect()} calls based on the evaluation of a userspace process
-    that can perform mapware fingerprint scanning with YARA \cite{naik2020embedding}
+    that can perform malware fingerprint scanning with YARA \cite{naik2020embedding}
     and other forms of static anomaly detection.
 \end{enumerate}
